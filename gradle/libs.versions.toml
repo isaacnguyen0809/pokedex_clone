@@ -1,0 +1,37 @@
+[versions]
+androidx-junit = "1.1.5"
+constraintlayout = "2.1.4"
+core-splashscreen = "1.0.1"
+core_version = "1.12.0"
+appcompat_version = "1.6.1"
+espresso-core = "3.5.1"
+fragment-ktx = "1.6.2"
+junit = "4.13.2"
+leakcanary-android = "2.12"
+material = "1.10.0"
+navigation-fragment-ktx = "2.7.5"
+sdp-android = "1.1.0"
+ssp-android = "1.1.0"
+android-gradle = "8.2.0"
+kotlin = "1.9.20"
+[libraries]
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat_version" }
+androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core_version" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "core-splashscreen" }
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso-core" }
+androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragment-ktx" }
+androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-junit" }
+androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation-fragment-ktx" }
+androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation-fragment-ktx" }
+junit = { module = "junit:junit", version.ref = "junit" }
+leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary-android" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
+sdp-android = { module = "com.intuit.sdp:sdp-android", version.ref = "sdp-android" }
+ssp-android = { module = "com.intuit.ssp:ssp-android", version.ref = "ssp-android" }
+[bundles]
+responsive-android = ["sdp-android", "ssp-android"]
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "android-gradle" }
+android-kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
