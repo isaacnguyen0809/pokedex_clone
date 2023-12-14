@@ -56,7 +56,8 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
 
     //Responsive dp,sp
-    implementation(libs.bundles.responsive.android)
+    implementation(libs.ssp.android)
+    implementation(libs.sdp.android)
 
     //splash screen
     implementation(libs.androidx.core.splashscreen)

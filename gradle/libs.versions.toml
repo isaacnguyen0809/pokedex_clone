@@ -29,9 +29,6 @@ leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", ve
 material = { module = "com.google.android.material:material", version.ref = "material" }
 sdp-android = { module = "com.intuit.sdp:sdp-android", version.ref = "sdp-android" }
 ssp-android = { module = "com.intuit.ssp:ssp-android", version.ref = "ssp-android" }
-[bundles]
-responsive-android = ["sdp-android", "ssp-android"]
-
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
 android-kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
