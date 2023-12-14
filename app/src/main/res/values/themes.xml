@@ -1,0 +1,8 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Pokedex_clone" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/purple</item>
+    </style>
+
+    <style name="Theme.Pokedex_clone" parent="Base.Theme.Pokedex_clone" />
+</resources>
