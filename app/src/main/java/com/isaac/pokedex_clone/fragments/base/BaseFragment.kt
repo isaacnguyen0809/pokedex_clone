@@ -22,11 +22,8 @@ abstract class BaseFragment<VB : ViewBinding>(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        setupView()
         return inflate(inflater, container, false).also { _binding = it }.root
     }
-
-    abstract fun setupView()
 
     @CallSuper
     override fun onDestroyView() {

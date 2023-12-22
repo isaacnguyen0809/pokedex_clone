@@ -3,12 +3,55 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/home_nav">
 
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.isaac.pokedex_clone.fragments.home_screen.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
-    <fragment android:id="@+id/placeholder" />
+        android:id="@+id/favouriteFragment"
+        android:name="com.isaac.pokedex_clone.fragments.favourite_screen.FavouriteFragment"
+        android:label="fragment_favourite"
+        tools:layout="@layout/fragment_favourite" />
+    <navigation
+        android:id="@+id/home_nav"
+        app:startDestination="@id/homeFragment">
+        <fragment
+            android:id="@+id/detailFragment"
+            android:name="com.isaac.pokedex_clone.fragments.detail_screen.DetailFragment"
+            android:label="fragment_detail"
+            tools:layout="@layout/fragment_detail" />
+        <fragment
+            android:id="@+id/homeFragment"
+            android:name="com.isaac.pokedex_clone.fragments.home_screen.HomeFragment"
+            android:label="fragment_home"
+            tools:layout="@layout/fragment_home">
+            <action
+                android:id="@+id/action_homeFragment_to_detailFragment"
+                app:destination="@id/detailFragment"
+                app:enterAnim="@anim/fragment_open_enter"
+                app:exitAnim="@anim/fragment_open_exit"
+                app:popEnterAnim="@anim/fragment_close_enter"
+                app:popExitAnim="@anim/fragment_close_exit" />
+        </fragment>
+    </navigation>
+    <navigation
+        android:id="@+id/profile_nav"
+        app:startDestination="@id/profileFragment">
+        <fragment
+            android:id="@+id/profileFragment"
+            android:name="com.isaac.pokedex_clone.fragments.profile_screen.ProfileFragment"
+            android:label="fragment_profile"
+            tools:layout="@layout/fragment_profile">
+            <action
+                android:id="@+id/action_profileFragment_to_settingFragment"
+                app:destination="@id/settingFragment"
+                app:enterAnim="@anim/fragment_open_enter"
+                app:exitAnim="@anim/fragment_open_exit"
+                app:popEnterAnim="@anim/fragment_close_enter"
+                app:popExitAnim="@anim/fragment_close_exit" />
+        </fragment>
+        <fragment
+            android:id="@+id/settingFragment"
+            android:name="com.isaac.pokedex_clone.fragments.profile_screen.SettingFragment"
+            android:label="fragment_setting"
+            tools:layout="@layout/fragment_setting" />
+    </navigation>
 </navigation>

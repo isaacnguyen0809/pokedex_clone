@@ -1,5 +1,5 @@
 <resources>
-    <style name="Theme.App" parent="Theme.Material3.Dark.NoActionBar">
+    <style name="Theme.App" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimaryDark">@color/purple</item>
     </style>
 
@@ -13,5 +13,13 @@
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
         <!-- Set the theme of the Activity that follows your splash screen. -->
         <item name="postSplashScreenTheme">@style/Theme.App</item>
+    </style>
+
+    <style name="Imageview.Corner" parent="">
+        <item name="cornerSizeTopRight">0dp</item>
+        <item name="cornerSizeTopLeft">0dp</item>
+        <item name="cornerSizeBottomLeft">@dimen/_10sdp</item>
+        <item name="cornerSizeBottomRight">@dimen/_10sdp</item>
+        <item name="cornerFamily">rounded</item>
     </style>
 </resources>
