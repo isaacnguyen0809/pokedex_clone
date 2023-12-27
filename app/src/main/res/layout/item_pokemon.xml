@@ -3,28 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="@dimen/_3sdp">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/materialCardView"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_120sdp"
-        android:layout_marginTop="@dimen/_60sdp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_minus40sdp"
         app:cardBackgroundColor="#DDF2E9"
         app:cardCornerRadius="@dimen/_8sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
         app:strokeColor="@color/transparent"
         tools:background="#DDF2E9" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
         android:layout_marginVertical="@dimen/_4sdp"
-        android:layout_marginStart="@dimen/_10sdp"
         android:gravity="start"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@+id/materialCardView"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
         app:layout_constraintVertical_bias="0">
@@ -34,9 +38,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/tommy_light"
-            android:text="#001"
             android:textColor="#3A3337"
-            android:textSize="@dimen/_9ssp" />
+            android:textSize="@dimen/_9ssp"
+            tools:text="#001" />
 
         <TextView
             android:id="@+id/tvName"
@@ -44,34 +48,20 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/tommy_light"
-            android:text="Bulbasaur"
             android:textColor="#3A3337"
             android:textSize="@dimen/_16ssp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="Bulbasaur" />
 
-        <com.google.android.material.card.MaterialCardView
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_8sdp"
-            app:cardBackgroundColor="#ADDD8C"
-            app:cardCornerRadius="@dimen/_16sdp"
-            app:strokeColor="@color/transparent">
+            android:layout_marginVertical="@dimen/_10sdp"
+            app:chipSpacingHorizontal="@dimen/_4sdp"
+            app:chipSpacingVertical="@dimen/_6sdp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_8sdp"
-                android:layout_marginVertical="@dimen/_4sdp"
-                android:fontFamily="@font/tommy_light"
-                android:text="Grass"
-                android:textColor="#3A3337"
-                android:textSize="@dimen/_10ssp"
-                android:textStyle="bold" />
-
-
-        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
-
 
     <ImageView
         android:id="@+id/imageView"
@@ -80,7 +70,8 @@
         android:src="@drawable/bulbasur"
         app:layout_constraintEnd_toEndOf="@+id/materialCardView"
         app:layout_constraintStart_toStartOf="@+id/materialCardView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -41,6 +41,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 
 }
@@ -61,10 +62,9 @@ dependencies {
 
     //splash screen
     implementation(libs.androidx.core.splashscreen)
-    // debugImplementation because LeakCanary should only run in debug builds.
-
     implementation(libs.androidx.startup.runtime)
     implementation (libs.timber)
+    // debugImplementation because LeakCanary should only run in debug builds.
     debugImplementation(libs.leakcanary.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/favouriteFragment"
-        android:name="com.isaac.pokedex_clone.fragments.favourite_screen.FavouriteFragment"
+        android:name="com.isaac.pokedex_clone.presentation.favourite_screen.FavouriteFragment"
         android:label="fragment_favourite"
         tools:layout="@layout/fragment_favourite" />
     <navigation
@@ -15,12 +15,12 @@
         app:startDestination="@id/homeFragment">
         <fragment
             android:id="@+id/detailFragment"
-            android:name="com.isaac.pokedex_clone.fragments.detail_screen.DetailFragment"
+            android:name="com.isaac.pokedex_clone.presentation.detail_screen.DetailFragment"
             android:label="fragment_detail"
             tools:layout="@layout/fragment_detail" />
         <fragment
             android:id="@+id/homeFragment"
-            android:name="com.isaac.pokedex_clone.fragments.home_screen.HomeFragment"
+            android:name="com.isaac.pokedex_clone.presentation.home_screen.HomeFragment"
             android:label="fragment_home"
             tools:layout="@layout/fragment_home">
             <action
@@ -37,7 +37,7 @@
         app:startDestination="@id/profileFragment">
         <fragment
             android:id="@+id/profileFragment"
-            android:name="com.isaac.pokedex_clone.fragments.profile_screen.ProfileFragment"
+            android:name="com.isaac.pokedex_clone.presentation.profile_screen.ProfileFragment"
             android:label="fragment_profile"
             tools:layout="@layout/fragment_profile">
             <action
@@ -50,7 +50,7 @@
         </fragment>
         <fragment
             android:id="@+id/settingFragment"
-            android:name="com.isaac.pokedex_clone.fragments.profile_screen.SettingFragment"
+            android:name="com.isaac.pokedex_clone.presentation.profile_screen.SettingFragment"
             android:label="fragment_setting"
             tools:layout="@layout/fragment_setting" />
     </navigation>
