@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.android.kotlin)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -13,7 +15,6 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         manifestPlaceholders["appName"] = "PokedexClone"
     }
@@ -23,13 +24,26 @@ android {
             applicationIdSuffix = ".debug"
             isMinifyEnabled = false
             isShrinkResources = false
-            manifestPlaceholders["appName"] = "DEV-PokedexClone"
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         getByName("release") {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+    }
+
+    flavorDimensions += "default"
+
+    productFlavors {
+        create("dev") {
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+            manifestPlaceholders["appName"] = "DEV-PokedexClone"
+        }
+        create("product") {
+            applicationIdSuffix = ".product"
+            versionNameSuffix = "-product"
         }
     }
     compileOptions {
@@ -53,18 +67,19 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
-    //Navigation
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.bundles.retrofit.okhttp3)
+    implementation(libs.bundles.moshi)
+    implementation(libs.glide)
     implementation(libs.androidx.navigation.ui.ktx)
-
-    //Responsive dp,sp
     implementation(libs.ssp.android)
     implementation(libs.sdp.android)
-
-    //splash screen
+    implementation(libs.hilt.android)
+    ksp(libs.dagger.compiler)
+    ksp(libs.hilt.compiler)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.startup.runtime)
-    implementation (libs.timber)
-    // debugImplementation because LeakCanary should only run in debug builds.
+    implementation(libs.timber)
     debugImplementation(libs.leakcanary.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

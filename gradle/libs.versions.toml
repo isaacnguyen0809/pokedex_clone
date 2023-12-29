@@ -4,19 +4,29 @@ constraintlayout = "2.1.4"
 core-splashscreen = "1.0.1"
 core_version = "1.12.0"
 appcompat_version = "1.6.1"
+dagger-hilt = "2.49"
 espresso-core = "3.5.1"
 fragment-ktx = "1.6.2"
+glide = "4.16.0"
 junit = "4.13.2"
+kotlinx-coroutines-android = "1.7.3"
 leakcanary-android = "2.12"
 material = "1.11.0"
+moshi-kotlin = "1.15.0"
 navigation-fragment-ktx = "2.7.6"
+okhttp = "4.12.0"
+retrofit = "2.9.0"
 sdp-android = "1.1.0"
 ssp-android = "1.1.0"
 android-gradle = "8.2.0"
-kotlin = "1.9.20"
+kotlin = "1.9.21"
 startup-runtime = "1.1.1"
 timber = "5.0.1"
+ksp = "1.9.21-1.0.15"
 [libraries]
+material = { module = "com.google.android.material:material", version.ref = "material" }
+
+# AndroidX
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat_version" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core_version" }
@@ -27,12 +37,44 @@ androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-j
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation-fragment-ktx" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation-fragment-ktx" }
 androidx-startup-runtime = { module = "androidx.startup:startup-runtime", version.ref = "startup-runtime" }
+
+# Dagger - Hilt
+dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger-hilt" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "dagger-hilt" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "dagger-hilt" }
 junit = { module = "junit:junit", version.ref = "junit" }
+
+# Kotlin Coroutines
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines-android" }
 leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary-android" }
-material = { module = "com.google.android.material:material", version.ref = "material" }
+
+# Retrofit - Okhttp3 - Moshi
+logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofit" }
+moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi-kotlin" }
+moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi-kotlin" }
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+
+#Responsive UI
 sdp-android = { module = "com.intuit.sdp:sdp-android", version.ref = "sdp-android" }
 ssp-android = { module = "com.intuit.ssp:ssp-android", version.ref = "ssp-android" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+[bundles]
+moshi = [
+    "moshi",
+    "moshi-kotlin"
+]
+retrofit-okhttp3 = [
+    "okhttp",
+    "logging-interceptor",
+    "retrofit",
+    "converter-moshi"
+]
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
 android-kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
