@@ -1,26 +1,23 @@
 package com.isaac.pokedex_clone.presentation.home_screen
 
-import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.chip.Chip
-import com.google.android.material.shape.ShapeAppearanceModel
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.Target
 import com.isaac.pokedex_clone.R
+import com.isaac.pokedex_clone.data.model.PokemonResponse
 import com.isaac.pokedex_clone.databinding.ItemPokemonBinding
-import com.isaac.pokedex_clone.domain.model.Pokemon
 
-private object PokemonDiffItemCallBack : DiffUtil.ItemCallback<Pokemon>() {
-    override fun areItemsTheSame(oldItem: Pokemon, newItem: Pokemon) = oldItem.name == newItem.name
-    override fun areContentsTheSame(oldItem: Pokemon, newItem: Pokemon) = oldItem == newItem
+private object PokemonDiffItemCallBack : DiffUtil.ItemCallback<PokemonResponse>() {
+    override fun areItemsTheSame(oldItem: PokemonResponse, newItem: PokemonResponse) = oldItem.name == newItem.name
+    override fun areContentsTheSame(oldItem: PokemonResponse, newItem: PokemonResponse) = oldItem == newItem
 }
 
 class PokemonAdapter :
-    ListAdapter<Pokemon, PokemonAdapter.ViewHolder>(PokemonDiffItemCallBack) {
-
+    ListAdapter<PokemonResponse, PokemonAdapter.ViewHolder>(PokemonDiffItemCallBack) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(ItemPokemonBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -31,22 +28,18 @@ class PokemonAdapter :
         private val binding: ItemPokemonBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Pokemon, position: Int) {
+        fun bind(item: PokemonResponse, position: Int) {
             val context = binding.root.context
+            Glide.with(context)
+                .load(item.getImageUrl())
+                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                .into(binding.imageView)
             binding.run {
                 this.tvName.text = item.name
                 this.tvNumber.text = context.getString(R.string.pokemon_number, "$position")
             }
-            for (i in 1..4) {
-                val chip = Chip(context)
-                chip.text = "D$i"
-                chip.chipBackgroundColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.green))
-                chip.shapeAppearanceModel = ShapeAppearanceModel().withCornerSize(60f)
-                chip.chipStrokeColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.transparent))
-                chip.isClickable = false
-                chip.setEnsureMinTouchTargetSize(false)
-                binding.chipGroup.addView(chip)
-            }
         }
     }
+
+
 }

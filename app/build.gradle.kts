@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.android.kotlin)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.dagger.hilt)
 }
 
 android {
@@ -24,11 +25,13 @@ android {
             applicationIdSuffix = ".debug"
             isMinifyEnabled = false
             isShrinkResources = false
+            buildConfigField("String", "API_DOMAIN", "\"https://pokeapi.co/api/v2/\"")
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         getByName("release") {
             isMinifyEnabled = true
             isShrinkResources = true
+            buildConfigField("String", "API_DOMAIN", "\"https://pokeapi.co/api/v2/\"")
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
@@ -47,11 +50,19 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs = listOf(
+            "-Xopt-in=kotlin.RequiresOptIn",
+            "-Xopt-in=kotlin.ExperimentalStdlibApi",
+            "-Xopt-in=kotlin.time.ExperimentalTime",
+            "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            "-Xopt-in=kotlinx.coroutines.FlowPreview",
+        )
     }
     buildFeatures {
         viewBinding = true
@@ -61,6 +72,7 @@ android {
 }
 
 dependencies {
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -75,6 +87,9 @@ dependencies {
     implementation(libs.ssp.android)
     implementation(libs.sdp.android)
     implementation(libs.hilt.android)
+    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
     ksp(libs.dagger.compiler)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.core.splashscreen)
