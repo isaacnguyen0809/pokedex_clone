@@ -12,38 +12,40 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
-    private val pokemonAdapter by lazy(LazyThreadSafetyMode.NONE) {
-        PokemonAdapter()
-    }
+    private lateinit var pokemonAdapter: PokemonAdapter
 
     private val homeViewModel by viewModels<HomeViewModel>()
 
     override fun setupView() {
-        homeViewModel
+        setupRecyclerView()
+        observeData()
+    }
+
+    private fun setupRecyclerView() {
+        pokemonAdapter = PokemonAdapter(this)
         binding.rvPokemon.run {
-            setHasFixedSize(true)
             layoutManager = GridLayoutManager(context, 2)
             adapter = pokemonAdapter
         }
-        observeData()
     }
 
     private fun observeData() {
         homeViewModel.uiStateFlow.collectIn(this) {
             when (it) {
                 is HomeUiState.Loading -> {
-
+                    loadingDialogManager.showLoading(true)
                 }
 
                 is HomeUiState.Success -> {
+                    loadingDialogManager.showLoading(false)
                     pokemonAdapter.submitList(it.data)
                 }
 
                 is HomeUiState.Error -> {
+                    loadingDialogManager.showLoading(false)
                 }
             }
         }
     }
-
 
 }

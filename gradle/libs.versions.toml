@@ -13,6 +13,7 @@ glide = "4.16.0"
 junit = "4.13.2"
 kotlinx-coroutines-android = "1.7.3"
 leakcanary-android = "2.12"
+lottie = "6.3.0"
 material = "1.11.0"
 moshi-kotlin = "1.15.0"
 navigation-fragment-ktx = "2.7.6"
@@ -30,6 +31,7 @@ androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-lived
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle-viewmodel-ktx" }
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
 lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle-viewmodel-ktx" }
+lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
 
 # AndroidX

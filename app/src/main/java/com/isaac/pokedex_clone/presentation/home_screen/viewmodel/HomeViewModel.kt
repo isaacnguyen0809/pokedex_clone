@@ -19,7 +19,6 @@ class HomeViewModel @Inject constructor(
 
     val uiStateFlow = _uiMutableStateFlow.asStateFlow()
 
-
     init {
         Timber.d("Init HomeViewModel")
         getListPokemon()
