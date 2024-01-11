@@ -46,20 +46,12 @@
             android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginVertical="@dimen/_8sdp"
             android:fontFamily="@font/tommy_light"
             android:textColor="#3A3337"
             android:textSize="@dimen/_16ssp"
             android:textStyle="bold"
             tools:text="Bulbasaur" />
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/_10sdp"
-            app:chipSpacingHorizontal="@dimen/_4sdp"
-            app:chipSpacingVertical="@dimen/_6sdp" />
 
     </LinearLayout>
 

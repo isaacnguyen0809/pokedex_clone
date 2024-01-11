@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import javax.inject.Inject
 
 
 abstract class BaseFragment<VB : ViewBinding>(
@@ -15,6 +16,9 @@ abstract class BaseFragment<VB : ViewBinding>(
     private var _binding: VB? = null
 
     protected val binding get() = _binding!!
+
+    @Inject
+    lateinit var loadingDialogManager: LoadingDialogManager
 
     @CallSuper
     override fun onCreateView(

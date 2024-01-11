@@ -1,52 +1,80 @@
 package com.isaac.pokedex_clone.presentation.home_screen
 
-import android.content.res.ColorStateList
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.chip.Chip
-import com.google.android.material.shape.ShapeAppearanceModel
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.isaac.pokedex_clone.R
+import com.isaac.pokedex_clone.data.model.PokemonResponse
 import com.isaac.pokedex_clone.databinding.ItemPokemonBinding
-import com.isaac.pokedex_clone.domain.model.Pokemon
+import com.isaac.pokedex_clone.utils.loadImageUrl
 
-private object PokemonDiffItemCallBack : DiffUtil.ItemCallback<Pokemon>() {
-    override fun areItemsTheSame(oldItem: Pokemon, newItem: Pokemon) = oldItem.name == newItem.name
-    override fun areContentsTheSame(oldItem: Pokemon, newItem: Pokemon) = oldItem == newItem
+private object PokemonDiffItemCallBack : DiffUtil.ItemCallback<PokemonResponse>() {
+    override fun areItemsTheSame(oldItem: PokemonResponse, newItem: PokemonResponse) = oldItem.name == newItem.name
+    override fun areContentsTheSame(oldItem: PokemonResponse, newItem: PokemonResponse) = oldItem == newItem
 }
 
-class PokemonAdapter :
-    ListAdapter<Pokemon, PokemonAdapter.ViewHolder>(PokemonDiffItemCallBack) {
-
+class PokemonAdapter(val fragment: Fragment) :
+    ListAdapter<PokemonResponse, PokemonAdapter.ViewHolder>(PokemonDiffItemCallBack) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(ItemPokemonBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(getItem(position), position + 1)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(getItem(position), position + 1)
+    }
 
     inner class ViewHolder(
         private val binding: ItemPokemonBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(item: Pokemon, position: Int) {
+        fun bind(item: PokemonResponse, position: Int) {
             val context = binding.root.context
-            binding.run {
-                this.tvName.text = item.name
-                this.tvNumber.text = context.getString(R.string.pokemon_number, "$position")
+            binding.root.setOnClickListener {
+                fragment.findNavController().navigate(R.id.action_homeFragment_to_detailFragment)
             }
-            for (i in 1..4) {
-                val chip = Chip(context)
-                chip.text = "D$i"
-                chip.chipBackgroundColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.green))
-                chip.shapeAppearanceModel = ShapeAppearanceModel().withCornerSize(60f)
-                chip.chipStrokeColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.transparent))
-                chip.isClickable = false
-                chip.setEnsureMinTouchTargetSize(false)
-                binding.chipGroup.addView(chip)
+            binding.imageView.loadImageUrl(item.getImageUrl(), object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>,
+                    isFirstResource: Boolean
+                ): Boolean = false
+
+                override fun onResourceReady(
+                    resource: Drawable,
+                    model: Any,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    Palette.from(resource.toBitmap()).generate { palette ->
+                        palette?.lightMutedSwatch?.rgb?.let {
+                            binding.materialCardView.setCardBackgroundColor(
+                                it
+                            )
+                        }
+                    }
+                    return false
+                }
+            })
+
+
+            binding.run {
+                this.tvName.text = item.name.replaceFirstChar { it.uppercase() }
+                this.tvNumber.text = context.getString(R.string.pokemon_number, "$position")
             }
         }
     }
+
+
 }
