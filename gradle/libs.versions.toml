@@ -18,6 +18,7 @@ material = "1.11.0"
 moshi-kotlin = "1.15.0"
 navigation-fragment-ktx = "2.7.6"
 okhttp = "4.12.0"
+palette = "1.0.0"
 retrofit = "2.9.0"
 sdp-android = "1.1.0"
 ssp-android = "1.1.0"
@@ -29,6 +30,7 @@ ksp = "1.9.21-1.0.15"
 [libraries]
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "androidx-lifecycle-viewmodel-ktx" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle-viewmodel-ktx" }
+androidx-palette = { module = "androidx.palette:palette", version.ref = "palette" }
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
 lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle-viewmodel-ktx" }
 lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }

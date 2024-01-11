@@ -1,6 +1,5 @@
 package com.isaac.pokedex_clone.utils
 
-import android.content.res.Resources.getSystem
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -13,10 +12,6 @@ import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 import kotlin.coroutines.cancellation.CancellationException
-
-val Int.dp: Int get() = (this / getSystem().displayMetrics.density).toInt()
-
-val Int.px: Int get() = (this * getSystem().displayMetrics.density).toInt()
 
 //Flow
 inline fun <T> Flow<T>.collectIn(
