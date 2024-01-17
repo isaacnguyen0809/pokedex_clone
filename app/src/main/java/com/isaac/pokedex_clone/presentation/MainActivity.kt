@@ -3,6 +3,7 @@ package com.isaac.pokedex_clone.presentation
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -26,6 +27,9 @@ class MainActivity : AppCompatActivity() {
     private fun setupNavigationController() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.frgContainer) as NavHostFragment
         navController = navHostFragment.navController
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            binding.bottomNavigationView.isVisible = destination.id != R.id.loginFragment
+        }
         binding.bottomNavigationView.setupWithNavController(navController)
     }
 

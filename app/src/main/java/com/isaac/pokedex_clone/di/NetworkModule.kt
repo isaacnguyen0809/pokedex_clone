@@ -1,8 +1,9 @@
 package com.isaac.pokedex_clone.di
 
 import com.isaac.pokedex_clone.BuildConfig
-import com.isaac.pokedex_clone.data.remote.interceptor.AuthInterceptor
+import com.isaac.pokedex_clone.data.remote.AuthService
 import com.isaac.pokedex_clone.data.remote.PokemonService
+import com.isaac.pokedex_clone.data.remote.interceptor.AuthInterceptor
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -21,12 +22,20 @@ import javax.inject.Singleton
 @Retention(AnnotationRetention.RUNTIME)
 annotation class BaseUrlQualifier
 
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class AuthUrlQualifier
+
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
     @Provides
     @BaseUrlQualifier
     fun provideBaseUrl(): String = BuildConfig.API_DOMAIN
+
+    @Provides
+    @AuthUrlQualifier
+    fun provideAuthUrl(): String = "http://10.0.2.2:3000/"
 
     @Provides
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
@@ -46,11 +55,12 @@ object NetworkModule {
         .connectTimeout(20, TimeUnit.SECONDS)
         .readTimeout(20, TimeUnit.SECONDS)
         .writeTimeout(20, TimeUnit.SECONDS)
-        .addNetworkInterceptor(httpLoggingInterceptor)
         .addInterceptor(authInterceptor)
+        .addInterceptor(httpLoggingInterceptor)
         .build()
 
     @Provides
+    @BaseUrlQualifier
     @Singleton
     fun provideRetrofit(
         @BaseUrlQualifier baseUrl: String,
@@ -63,6 +73,24 @@ object NetworkModule {
         .build()
 
     @Provides
+    @AuthUrlQualifier
     @Singleton
-    fun providePokemonService(retrofit: Retrofit): PokemonService = retrofit.create()
+    fun provideAuthRetrofit(
+        @AuthUrlQualifier baseUrl: String,
+        moshi: Moshi,
+        okHttpClient: OkHttpClient
+    ): Retrofit = Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .client(okHttpClient)
+        .addConverterFactory(MoshiConverterFactory.create(moshi))
+        .build()
+
+    @Provides
+    @Singleton
+    fun providePokemonService(@BaseUrlQualifier retrofit: Retrofit): PokemonService = retrofit.create()
+
+    @Provides
+    @Singleton
+    fun provideAuthService(@AuthUrlQualifier retrofit: Retrofit): AuthService = retrofit.create()
+
 }

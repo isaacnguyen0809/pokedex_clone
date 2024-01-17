@@ -10,7 +10,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class PokemonRepositoryImpl @Inject constructor(
+class PokemonRepoImpl @Inject constructor(
     private val pokemonService: PokemonService,
     @AppDispatcher(DispatcherType.IO) private val ioDispatcher: CoroutineDispatcher
 ) : PokemonRepository {
