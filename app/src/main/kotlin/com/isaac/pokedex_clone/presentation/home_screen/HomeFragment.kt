@@ -1,5 +1,6 @@
 package com.isaac.pokedex_clone.presentation.home_screen
 
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.isaac.pokedex_clone.databinding.FragmentHomeBinding
@@ -43,6 +44,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
                 is HomeUiState.Error -> {
                     loadingDialogManager.showLoading(false)
+                    Toast.makeText(requireContext(), "${it.error}", Toast.LENGTH_LONG).show()
                 }
             }
         }

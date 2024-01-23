@@ -3,6 +3,10 @@ package com.isaac.pokedex_clone.presentation.home_screen.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.isaac.pokedex_clone.domain.usecase.GetListPokemonUseCase
+import com.isaac.pokedex_clone.utils.getStatusCode
+import com.isaac.pokedex_clone.utils.onError
+import com.isaac.pokedex_clone.utils.onException
+import com.isaac.pokedex_clone.utils.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getListPokemonUseCase: GetListPokemonUseCase
+    private val getListPokemonUseCase: GetListPokemonUseCase,
 ) : ViewModel() {
 
     private val _uiMutableStateFlow = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
@@ -26,12 +30,17 @@ class HomeViewModel @Inject constructor(
 
     private fun getListPokemon() {
         viewModelScope.launch {
-            _uiMutableStateFlow.value = getListPokemonUseCase.invoke(LIMIT, OFF_SET)
-                .fold(
-                    onSuccess = {
-                        HomeUiState.Success(it.result)
-                    }, onFailure = HomeUiState::Error
-                )
+            getListPokemonUseCase.invoke(LIMIT, OFF_SET)
+                .onSuccess {
+                    _uiMutableStateFlow.value = HomeUiState.Success(it.result)
+                }
+                .onError { code, _ ->
+                    Timber.e("Code: $code")
+                    _uiMutableStateFlow.value = HomeUiState.Error(Exception(code.getStatusCode().toString()))
+                }
+                .onException {
+                    _uiMutableStateFlow.value = HomeUiState.Error(it)
+                }
         }
 
     }
