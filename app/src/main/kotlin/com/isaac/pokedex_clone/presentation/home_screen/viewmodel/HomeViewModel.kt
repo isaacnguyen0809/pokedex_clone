@@ -34,8 +34,7 @@ class HomeViewModel @Inject constructor(
                 .onSuccess {
                     _uiMutableStateFlow.value = HomeUiState.Success(it.result)
                 }
-                .onError { code, _ ->
-                    Timber.e("Code: $code")
+                .onError { code, _, _ ->
                     _uiMutableStateFlow.value = HomeUiState.Error(Exception(code.getStatusCode().toString()))
                 }
                 .onException {

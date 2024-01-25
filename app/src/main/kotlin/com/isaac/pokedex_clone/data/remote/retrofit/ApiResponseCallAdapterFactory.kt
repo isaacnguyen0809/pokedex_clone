@@ -17,13 +17,14 @@
 
 package com.isaac.pokedex_clone.data.remote.retrofit
 
+import com.squareup.moshi.Moshi
 import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
-class ApiResponseCallAdapterFactory : CallAdapter.Factory() {
+class ApiResponseCallAdapterFactory(val moshi: Moshi) : CallAdapter.Factory() {
 
     override fun get(
         returnType: Type,
@@ -39,7 +40,7 @@ class ApiResponseCallAdapterFactory : CallAdapter.Factory() {
                 }
 
                 val resultType = getParameterUpperBound(0, callType as ParameterizedType)
-                return ApiResponseCallAdapter(resultType)
+                return ApiResponseCallAdapter(resultType, moshi)
             }
 
             else -> return null
@@ -49,6 +50,7 @@ class ApiResponseCallAdapterFactory : CallAdapter.Factory() {
     companion object {
         @JvmStatic
         fun create(
-        ): ApiResponseCallAdapterFactory = ApiResponseCallAdapterFactory()
+            moshi: Moshi,
+        ): ApiResponseCallAdapterFactory = ApiResponseCallAdapterFactory(moshi = moshi)
     }
 }

@@ -8,6 +8,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.isaac.pokedex_clone.R
 import com.isaac.pokedex_clone.data.remote.retrofit.ApiResponse
+import com.isaac.pokedex_clone.data.remote.retrofit.ErrorResponse
 import com.isaac.pokedex_clone.data.remote.retrofit.StatusCode
 
 val Int.dp: Int get() = (this / getSystem().displayMetrics.density).toInt()
@@ -37,10 +38,10 @@ suspend fun <T : Any> ApiResponse<T>.onSuccess(
 }
 
 suspend fun <T : Any> ApiResponse<T>.onError(
-    executable: suspend (code: Int, message: String?) -> Unit,
+    executable: suspend (code: Int, message: String?, errorResponse: ErrorResponse) -> Unit,
 ): ApiResponse<T> = apply {
     if (this is ApiResponse.Error<T>) {
-        executable(code, message)
+        executable(code, message, error)
     }
 }
 

@@ -3,8 +3,8 @@ package com.isaac.pokedex_clone.di
 import com.isaac.pokedex_clone.BuildConfig
 import com.isaac.pokedex_clone.data.remote.AuthService
 import com.isaac.pokedex_clone.data.remote.PokemonService
-import com.isaac.pokedex_clone.data.remote.retrofit.ApiResponseCallAdapterFactory
 import com.isaac.pokedex_clone.data.remote.interceptor.AuthInterceptor
+import com.isaac.pokedex_clone.data.remote.retrofit.ApiResponseCallAdapterFactory
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -71,7 +71,7 @@ object NetworkModule {
         .baseUrl(baseUrl)
         .client(okHttpClient)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .addCallAdapterFactory(ApiResponseCallAdapterFactory.create())
+        .addCallAdapterFactory(ApiResponseCallAdapterFactory.create(moshi))
         .build()
 
     @Provides
