@@ -6,6 +6,7 @@ import com.isaac.pokedex_clone.data.remote.PokemonService
 import com.isaac.pokedex_clone.data.remote.interceptor.AuthInterceptor
 import com.isaac.pokedex_clone.data.remote.retrofit.ApiResponseCallAdapterFactory
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,6 +38,13 @@ object NetworkModule {
     @Provides
     @AuthUrlQualifier
     fun provideAuthUrl(): String = "http://10.0.2.2:3000/"
+
+    @Provides
+    @Singleton
+    fun provideMoshi(): Moshi =
+        Moshi.Builder()
+            .addLast(KotlinJsonAdapterFactory())
+            .build()
 
     @Provides
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
@@ -85,6 +93,7 @@ object NetworkModule {
         .baseUrl(baseUrl)
         .client(okHttpClient)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
+        .addCallAdapterFactory(ApiResponseCallAdapterFactory.create(moshi))
         .build()
 
     @Provides
