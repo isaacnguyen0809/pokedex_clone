@@ -7,7 +7,6 @@ import com.isaac.pokedex_clone.data.remote.retrofit.ApiResponse
 import com.isaac.pokedex_clone.domain.repository.AuthRepository
 import com.isaac.pokedex_clone.utils.AppDispatcher
 import com.isaac.pokedex_clone.utils.DispatcherType
-import com.isaac.pokedex_clone.utils.runSuspendCatching
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -23,13 +22,6 @@ class AuthRepoImpl @Inject constructor(
                 password = "123456",
             ),
         )
-    }
-
-
-    override suspend fun logout() {
-        runSuspendCatching {
-            //TODO : DO NOTHING FOR NOW
-        }
     }
 
     override suspend fun checkAuth(): Result<Any> {

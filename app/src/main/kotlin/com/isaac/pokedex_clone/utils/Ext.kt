@@ -19,6 +19,7 @@ fun ImageView.loadImageUrl(url: String?, requestListener: RequestListener<Drawab
     Glide.with(context)
         .load(url)
         .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+        .placeholder(R.drawable.pokeball)
         .error(R.drawable.ic_home)
         .listener(requestListener)
         .into(this)

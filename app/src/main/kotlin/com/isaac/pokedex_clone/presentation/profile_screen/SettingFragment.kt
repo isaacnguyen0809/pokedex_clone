@@ -1,6 +1,9 @@
 package com.isaac.pokedex_clone.presentation.profile_screen
 
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.isaac.pokedex_clone.R
 import com.isaac.pokedex_clone.databinding.FragmentSettingBinding
 import com.isaac.pokedex_clone.presentation.base.BaseFragment
 import com.isaac.pokedex_clone.presentation.login_screen.LoginViewModel
@@ -16,8 +19,14 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
         binding.btLogout.setOnClickListener {
             viewModel.logout()
         }
+        binding.btLogin.setOnClickListener {
+            findNavController().navigate(R.id.loginFragment)
+        }
         viewModel.userFlow.collectIn(viewLifecycleOwner) { userLocal ->
-            binding.value.text = userLocal.takeIf { it != null }.toString()
+            binding.value.text = userLocal?.toString() ?: ""
+
+            binding.btLogout.isVisible = userLocal != null
+            binding.btLogin.isVisible = userLocal == null
         }
     }
 

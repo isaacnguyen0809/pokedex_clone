@@ -3,7 +3,6 @@ package com.isaac.pokedex_clone.presentation.login_screen
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.isaac.pokedex_clone.R
 import com.isaac.pokedex_clone.databinding.FragmentLoginBinding
 import com.isaac.pokedex_clone.presentation.base.BaseFragment
 import com.isaac.pokedex_clone.utils.collectIn
@@ -35,7 +34,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                 is LoginUiState.Success -> {
                     delay(3000)
                     loadingDialogManager.showLoading(false)
-                    findNavController().navigate(R.id.action_loginFragment_to_home_nav)
+                    findNavController().popBackStack()
                 }
 
                 else -> {

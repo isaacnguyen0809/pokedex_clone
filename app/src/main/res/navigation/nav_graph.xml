@@ -3,21 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
-
-    <action
-        android:id="@+id/action_pop_out_of_game"
-        app:popUpTo="@id/loginFragment"
-        app:popUpToInclusive="true" />
+    app:startDestination="@id/home_nav">
     <fragment
         android:id="@+id/favouriteFragment"
         android:name="com.isaac.pokedex_clone.presentation.favourite_screen.FavouriteFragment"
         android:label="fragment_favourite"
-        tools:layout="@layout/fragment_favourite">
-        <action
-            android:id="@+id/action_favouriteFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_favourite" />
     <navigation
         android:id="@+id/home_nav"
         app:startDestination="@id/homeFragment">
@@ -39,9 +30,6 @@
                 app:popEnterAnim="@anim/fragment_close_enter"
                 app:popExitAnim="@anim/fragment_close_exit" />
         </fragment>
-        <action
-            android:id="@+id/action_global_loginFragment"
-            app:destination="@id/loginFragment" />
     </navigation>
     <navigation
         android:id="@+id/profile_nav"
@@ -64,24 +52,11 @@
                 app:popEnterAnim="@anim/fragment_close_enter"
                 app:popExitAnim="@anim/fragment_close_exit" />
         </fragment>
-        <action
-            android:id="@+id/action_global_loginFragment"
-            app:destination="@id/loginFragment" />
     </navigation>
 
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.isaac.pokedex_clone.presentation.login_screen.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login">
-        <action
-            android:id="@+id/action_loginFragment_to_home_nav"
-            app:destination="@id/home_nav" />
-        <action
-            android:id="@+id/action_loginFragment_to_profile_nav2"
-            app:destination="@id/profile_nav" />
-        <action
-            android:id="@+id/action_loginFragment_to_favouriteFragment"
-            app:destination="@id/favouriteFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_login"/>
 </navigation>

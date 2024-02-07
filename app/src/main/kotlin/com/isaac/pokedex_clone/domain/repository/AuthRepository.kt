@@ -6,8 +6,6 @@ import com.isaac.pokedex_clone.data.remote.retrofit.ApiResponse
 interface AuthRepository {
     suspend fun login(): ApiResponse<LoginResponse>
 
-    suspend fun logout()
-
     suspend fun checkAuth(): Result<Any>
 
 }

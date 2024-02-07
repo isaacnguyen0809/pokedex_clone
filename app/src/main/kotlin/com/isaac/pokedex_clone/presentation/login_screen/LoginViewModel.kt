@@ -24,7 +24,6 @@ class LoginViewModel @Inject constructor(
 
     val uiStateFlow = _uiMutableStateFlow.asStateFlow()
 
-
     val userFlow: Flow<UserLocal?> = authUseCase.getUser().distinctUntilChanged()
 
     fun login() {

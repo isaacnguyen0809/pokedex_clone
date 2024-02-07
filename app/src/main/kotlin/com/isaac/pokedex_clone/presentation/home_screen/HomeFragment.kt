@@ -13,7 +13,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
-    private lateinit var pokemonAdapter: PokemonAdapter
+    private val pokemonAdapter: PokemonAdapter by lazy(LazyThreadSafetyMode.NONE) {
+        PokemonAdapter(this)
+    }
 
     private val homeViewModel by viewModels<HomeViewModel>()
 
@@ -23,7 +25,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     private fun setupRecyclerView() {
-        pokemonAdapter = PokemonAdapter(this)
         binding.rvPokemon.run {
             layoutManager = GridLayoutManager(context, 2)
             adapter = pokemonAdapter
@@ -50,4 +51,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
     }
 
+    override fun onDestroyView() {
+        binding.rvPokemon.adapter = null
+        super.onDestroyView()
+    }
 }
