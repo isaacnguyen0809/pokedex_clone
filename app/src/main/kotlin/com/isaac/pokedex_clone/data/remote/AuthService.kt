@@ -6,6 +6,7 @@ import com.isaac.pokedex_clone.data.remote.retrofit.ApiResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface AuthService {
 
@@ -14,4 +15,7 @@ interface AuthService {
 
     @GET("check-auth")
     suspend fun checkAuth()
+
+    @GET("demo")
+    suspend fun callDemo(@Query("count") count: Int): ApiResponse<String>
 }

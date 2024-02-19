@@ -22,11 +22,19 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
         binding.btLogin.setOnClickListener {
             findNavController().navigate(R.id.loginFragment)
         }
-        viewModel.userFlow.collectIn(viewLifecycleOwner) { userLocal ->
-            binding.value.text = userLocal?.toString() ?: ""
+        viewModel.userFlow.collectIn(this) { userLocal ->
+            binding.loginValue.text = userLocal?.toString() ?: ""
 
             binding.btLogout.isVisible = userLocal != null
             binding.btLogin.isVisible = userLocal == null
+        }
+
+        binding.btDemo.setOnClickListener {
+            viewModel.callDemo()
+        }
+
+        viewModel.demoStateFlow.collectIn(this) {
+            binding.demoValue.text = it
         }
     }
 

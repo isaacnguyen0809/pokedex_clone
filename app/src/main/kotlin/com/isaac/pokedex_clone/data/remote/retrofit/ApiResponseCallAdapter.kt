@@ -4,11 +4,13 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import okhttp3.Request
 import okio.Timeout
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.reflect.Type
+
 
 internal class ApiResponseCallAdapter(
     private val resultType: Type,
@@ -39,31 +41,21 @@ class ApiResponseCall<T>(
                         this@ApiResponseCall,
                         Response.success(ApiResponse.Exception(Exception("Response body is null")))
                     )
-//                    val errorResponseString = "{\"error\":\"Co loi xay ra\",\"code\":4044}"
-//                    val jsonAdapter: JsonAdapter<ErrorResponse> = moshi.adapter(ErrorResponse::class.java)
-//                    val errorResponse = jsonAdapter.fromJson(errorResponseString)
-//                    Timber.d("Error response: $errorResponse")
-//                    callback.onResponse(
-//                        this@ApiResponseCall,
-//                        Response.success(
-//                            ApiResponse.Error(
-//                                response.code(),
-//                                response.message(),
-//                                errorResponse ?: ErrorResponse("Unknown error", 0)
-//                            )
-//                        ),
-//                    )
                 } else {
-                    val jsonAdapter: JsonAdapter<ErrorResponse> = moshi.adapter(ErrorResponse::class.java)
-                    response.errorBody()
-                    val errorResponse = jsonAdapter.fromJson(response.errorBody().toString())
+                    var errorResponse = ErrorResponse("Unknown error")
+                    try {
+                        val jsonAdapter: JsonAdapter<ErrorResponse> = moshi.adapter(ErrorResponse::class.java)
+                        val jObjError = JSONObject(response.errorBody()?.string() ?: "").toString()
+                        errorResponse = jsonAdapter.fromJson(jObjError)!!
+                    } catch (_: Exception) {
+                    }
                     callback.onResponse(
                         this@ApiResponseCall,
                         Response.success(
                             ApiResponse.Error(
                                 response.code(),
                                 response.message(),
-                                errorResponse ?: ErrorResponse("Unknown error", 0)
+                                errorResponse
                             )
                         ),
                     )

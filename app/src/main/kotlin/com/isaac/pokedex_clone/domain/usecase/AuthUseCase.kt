@@ -29,5 +29,7 @@ class AuthUseCase @Inject constructor(
         userLocalRepository.update { null }
     }
 
+    suspend fun callDemo(): ApiResponse<String> = authRepository.callDemo()
+
     suspend fun checkAuth() = authRepository.checkAuth()
 }

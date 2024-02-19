@@ -9,6 +9,7 @@ import com.isaac.pokedex_clone.utils.AppDispatcher
 import com.isaac.pokedex_clone.utils.DispatcherType
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
 class AuthRepoImpl @Inject constructor(
@@ -28,6 +29,12 @@ class AuthRepoImpl @Inject constructor(
         return runCatching {
             authService.checkAuth()
         }
+    }
+
+    private val count = AtomicInteger()
+
+    override suspend fun callDemo(): ApiResponse<String> = withContext(ioDispatcher) {
+        authService.callDemo(count.getAndIncrement())
     }
 
 }

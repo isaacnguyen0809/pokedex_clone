@@ -8,4 +8,5 @@ interface AuthRepository {
 
     suspend fun checkAuth(): Result<Any>
 
+    suspend fun callDemo() : ApiResponse<String>
 }
