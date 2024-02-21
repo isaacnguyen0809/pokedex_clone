@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.isaac.pokedex.clone.UserLocal
 import com.isaac.pokedex_clone.domain.usecase.AuthUseCase
+import com.isaac.pokedex_clone.utils.NavigationEvent
+import com.isaac.pokedex_clone.utils.UiEvent
 import com.isaac.pokedex_clone.utils.onError
 import com.isaac.pokedex_clone.utils.onException
 import com.isaac.pokedex_clone.utils.onSuccess
@@ -12,6 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,6 +34,10 @@ class LoginViewModel @Inject constructor(
 
     val demoStateFlow = _demoStateFlow.asStateFlow()
 
+    private val _navigationEventFlow = MutableStateFlow<UiEvent<NavigationEvent>?>(null)
+    val navigationEventFlow = _navigationEventFlow.asStateFlow()
+
+
     fun login() {
         viewModelScope.launch {
             _uiMutableStateFlow.value = LoginUiState.Loading
@@ -38,6 +45,12 @@ class LoginViewModel @Inject constructor(
                 .onSuccess {
                     authUseCase.saveLoginResponseToUserLocal(it)
                     _uiMutableStateFlow.value = LoginUiState.Success(it)
+                    _navigationEventFlow.value = object : UiEvent<NavigationEvent> {
+                        override val data: NavigationEvent = NavigationEvent.NavigateToLogin
+                        override val onConsumed: () -> Unit = {
+                            _navigationEventFlow.update { null }
+                        }
+                    }
                 }.onException {
                     _uiMutableStateFlow.value = LoginUiState.Error(it)
                 }.onError { _, _, t ->

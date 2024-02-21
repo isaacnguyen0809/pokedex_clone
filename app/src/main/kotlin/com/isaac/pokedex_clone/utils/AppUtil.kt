@@ -7,7 +7,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -20,8 +19,27 @@ inline fun <T> Flow<T>.collectIn(
     crossinline action: suspend (value: T) -> Unit,
 ): Job = owner.lifecycleScope.launch {
     owner.lifecycle.repeatOnLifecycle(state = minActiveState) {
-        Timber.d("Start collecting...")
         collect { action(it) }
+    }
+}
+
+//Common interface for one-time event
+interface UiEvent<T> {
+    val data: T
+    val onConsumed: () -> Unit
+}
+
+//Collect the state of event and consume the value immediately
+inline fun <T> Flow<UiEvent<T>?>.collectEvent(
+    owner: LifecycleOwner,
+    minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
+    crossinline action: suspend (value: T?) -> Unit,
+): Job = owner.lifecycleScope.launch {
+    owner.lifecycle.repeatOnLifecycle(state = minActiveState) {
+        collect { uiEvent ->
+            action(uiEvent?.data)
+            uiEvent?.onConsumed?.invoke()
+        }
     }
 }
 
