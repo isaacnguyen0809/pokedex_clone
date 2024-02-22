@@ -59,7 +59,7 @@
         android:id="@+id/imageView"
         android:layout_width="@dimen/_100sdp"
         android:layout_height="@dimen/_100sdp"
-        android:src="@drawable/bulbasur"
+        android:src="@drawable/pokeball"
         app:layout_constraintEnd_toEndOf="@+id/materialCardView"
         app:layout_constraintStart_toStartOf="@+id/materialCardView"
         app:layout_constraintTop_toTopOf="parent"

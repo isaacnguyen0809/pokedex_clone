@@ -2,8 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.android.kotlin)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.dagger.hilt)
+    alias(libs.plugins.protobuf)
+    alias(libs.plugins.kapt)
 }
 
 android {
@@ -17,7 +18,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        manifestPlaceholders["appName"] = "PokedexClone"
+        manifestPlaceholders["appName"] = "Pokedex"
     }
 
     buildTypes {
@@ -42,7 +43,7 @@ android {
         create("dev") {
             applicationIdSuffix = ".dev"
             versionNameSuffix = "-dev"
-            manifestPlaceholders["appName"] = "DEV-PokedexClone"
+            manifestPlaceholders["appName"] = "DEV-Pokedex"
         }
         create("product") {
             applicationIdSuffix = ".product"
@@ -92,13 +93,31 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.lottie)
-    ksp(libs.dagger.compiler)
-    ksp(libs.hilt.compiler)
+    kapt(libs.hilt.compiler)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.startup.runtime)
     implementation(libs.timber)
+
+    implementation(libs.androidx.datastore)
+    implementation(libs.protobuf.javalite)
+    implementation(libs.tink.android)
     debugImplementation(libs.leakcanary.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.25.2"
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                create("java") {
+                    option("lite")
+                }
+            }
+        }
+    }
 }

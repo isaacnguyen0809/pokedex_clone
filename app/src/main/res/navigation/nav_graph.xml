@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/home_nav">
-
     <fragment
         android:id="@+id/favouriteFragment"
         android:name="com.isaac.pokedex_clone.presentation.favourite_screen.FavouriteFragment"
@@ -34,24 +33,30 @@
     </navigation>
     <navigation
         android:id="@+id/profile_nav"
-        app:startDestination="@id/profileFragment">
+        app:startDestination="@id/settingFragment">
         <fragment
             android:id="@+id/profileFragment"
             android:name="com.isaac.pokedex_clone.presentation.profile_screen.ProfileFragment"
             android:label="fragment_profile"
-            tools:layout="@layout/fragment_profile">
+            tools:layout="@layout/fragment_profile" />
+        <fragment
+            android:id="@+id/settingFragment"
+            android:name="com.isaac.pokedex_clone.presentation.profile_screen.SettingFragment"
+            android:label="fragment_setting"
+            tools:layout="@layout/fragment_setting">
             <action
-                android:id="@+id/action_profileFragment_to_settingFragment"
-                app:destination="@id/settingFragment"
+                android:id="@+id/action_settingFragment_to_profileFragment"
+                app:destination="@id/profileFragment"
                 app:enterAnim="@anim/fragment_open_enter"
                 app:exitAnim="@anim/fragment_open_exit"
                 app:popEnterAnim="@anim/fragment_close_enter"
                 app:popExitAnim="@anim/fragment_close_exit" />
         </fragment>
-        <fragment
-            android:id="@+id/settingFragment"
-            android:name="com.isaac.pokedex_clone.presentation.profile_screen.SettingFragment"
-            android:label="fragment_setting"
-            tools:layout="@layout/fragment_setting" />
     </navigation>
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.isaac.pokedex_clone.presentation.login_screen.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login"/>
 </navigation>
