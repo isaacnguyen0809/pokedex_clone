@@ -31,5 +31,4 @@ class AuthUseCase @Inject constructor(
 
     suspend fun callDemo(): ApiResponse<String> = authRepository.callDemo()
 
-    suspend fun checkAuth() = authRepository.checkAuth()
 }

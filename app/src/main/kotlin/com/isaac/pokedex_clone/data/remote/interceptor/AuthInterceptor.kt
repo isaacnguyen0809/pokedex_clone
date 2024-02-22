@@ -1,40 +1,99 @@
 package com.isaac.pokedex_clone.data.remote.interceptor
 
+import com.isaac.pokedex_clone.data.remote.AuthService
+import com.isaac.pokedex_clone.data.remote.AuthService.Factory.CUSTOM_HEADER
+import com.isaac.pokedex_clone.data.remote.AuthService.Factory.NO_AUTH
+import com.isaac.pokedex_clone.data.remote.body.RefreshTokenBody
+import com.isaac.pokedex_clone.domain.repository.UserLocalRepository
+import com.isaac.pokedex_clone.utils.AppDispatcher
+import com.isaac.pokedex_clone.utils.DispatcherType
+import com.isaac.pokedex_clone.utils.onError
+import com.isaac.pokedex_clone.utils.onSuccess
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import okhttp3.Interceptor
+import okhttp3.Request
 import okhttp3.Response
+import java.net.HttpURLConnection
 import javax.inject.Inject
+import javax.inject.Provider
 
-class AuthInterceptor @Inject constructor() : Interceptor {
+
+class AuthInterceptor @Inject constructor(
+    private val userLocalRepository: UserLocalRepository,
+    private val authService: Provider<AuthService>,
+    @AppDispatcher(DispatcherType.IO) private val ioDispatcher: CoroutineDispatcher,
+) : Interceptor {
+    private val mutex = Mutex()
     override fun intercept(chain: Interceptor.Chain): Response {
-        val originalRequest = chain.request()
-//        val accessToken = sessionManager.getAccessToken()
-//
-//        if (accessToken != null && sessionManager.isAccessTokenExpired()) {
-//            val refreshToken = sessionManager.getRefreshToken()
-//
-//            // Make the token refresh request
-//            val refreshedToken = runBlocking {
-//                val response = apiService.refreshAccessToken()
-//                // Update the refreshed access token and its expiration time in the session
-//                sessionManager.updateAccessToken(response.accessToken, response.expiresIn)
-//                response.accessToken
-//            }
-//
-//            if (refreshedToken != null) {
-//                // Create a new request with the refreshed access token
-//                val newRequest = originalRequest.newBuilder()
-//                    .header("Authorization", "Bearer $refreshedToken")
-//                    .build()
-//
-//                // Retry the request with the new access token
-//                return chain.proceed(newRequest)
-//            }
-//        }
-        // Add the access token to the request header
-        val authorizedRequest = originalRequest.newBuilder()
-//            .header("Authorization", "Bearer $accessToken")
-            .build()
+        val request = chain.request()
 
-        return chain.proceed(authorizedRequest)
+        if (NO_AUTH in request.headers.values(CUSTOM_HEADER)) {
+            return chain.proceedWithToken(request, null)
+        }
+
+        val accessToken = runBlocking(ioDispatcher) {
+            userLocalRepository.getUserLocal().first()?.token
+        }
+
+        val res = chain.proceedWithToken(request, accessToken)
+        if (res.code != HttpURLConnection.HTTP_UNAUTHORIZED) {
+            return res
+        }
+
+        val newToken = runBlocking(ioDispatcher) {
+            mutex.withLock {
+                val user = userLocalRepository.getUserLocal().first()
+                val maybeUpdatedToken = user?.token
+
+                when {
+                    user == null || maybeUpdatedToken == null ->
+                        null // already logged out!
+                    maybeUpdatedToken != accessToken ->
+                        maybeUpdatedToken // refreshed by another request
+                    else -> {
+                        val refreshTokenResponse = authService.get()
+                            .refreshToken(
+                                RefreshTokenBody(
+                                    refreshToken = user.refreshToken,
+                                    username = user.username
+                                )
+                            )
+                        var token: String? = null
+                        refreshTokenResponse.onSuccess {
+                            token = it.token
+                            userLocalRepository.update { userLocal ->
+                                (userLocal ?: return@update null)
+                                    .toBuilder()
+                                    .setToken(it.token)
+                                    .build()
+                            }
+                        }.onError { code, _, _ ->
+                            if (code == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                                userLocalRepository.update {
+                                    null
+                                }
+                            }
+                        }
+                        return@withLock token
+                    }
+                }
+            }
+        }
+        return if (newToken !== null) chain.proceedWithToken(request, newToken) else res
     }
+
+    private fun Interceptor.Chain.proceedWithToken(req: Request, token: String?): Response =
+        req.newBuilder()
+            .apply {
+                if (token !== null) {
+                    addHeader("Authorization", "Bearer $token")
+                }
+            }
+            .removeHeader(CUSTOM_HEADER)
+            .build()
+            .let(::proceed)
 }

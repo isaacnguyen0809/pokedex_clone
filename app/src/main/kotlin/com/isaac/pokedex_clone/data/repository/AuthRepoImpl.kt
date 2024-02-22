@@ -25,12 +25,6 @@ class AuthRepoImpl @Inject constructor(
         )
     }
 
-    override suspend fun checkAuth(): Result<Any> {
-        return runCatching {
-            authService.checkAuth()
-        }
-    }
-
     private val count = AtomicInteger()
 
     override suspend fun callDemo(): ApiResponse<String> = withContext(ioDispatcher) {
