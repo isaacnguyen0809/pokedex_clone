@@ -9,8 +9,11 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.isaac.pokedex_clone.R
 import com.isaac.pokedex_clone.databinding.ActivityMainBinding
+import com.isaac.pokedex_clone.utils.NetworkMonitor
+import com.isaac.pokedex_clone.utils.collectIn
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -20,11 +23,21 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
 
+    @Inject
+    lateinit var networkMonitor: NetworkMonitor
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         setupNavigationController()
+        observeNetworkConnection()
+    }
+
+    private fun observeNetworkConnection() {
+        networkMonitor.isOnline.collectIn(this) {
+            binding.cardViewInternet.isVisible = !it
+        }
     }
 
     private fun setupNavigationController() {

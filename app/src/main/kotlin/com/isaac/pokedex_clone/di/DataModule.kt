@@ -10,6 +10,8 @@ import com.google.crypto.tink.aead.AeadConfig
 import com.google.crypto.tink.aead.AesGcmKeyManager
 import com.google.crypto.tink.integration.android.AndroidKeysetManager
 import com.google.crypto.tink.integration.android.AndroidKeystoreKmsClient.*
+import com.isaac.pokedex_clone.utils.ConnectivityManagerNetworkMonitor
+import com.isaac.pokedex_clone.utils.NetworkMonitor
 import com.isaac.pokedex.clone.UserLocal
 import com.isaac.pokedex_clone.data.local.UserLocalSerializer
 import com.isaac.pokedex_clone.data.repository.AuthRepoImpl
@@ -46,6 +48,9 @@ interface DataModule {
 
     @Binds
     fun bindCryptoRepository(cryptoImpl: CryptoImpl): CryptoRepository
+
+    @Binds
+    fun bindsNetworkMonitor(networkMonitor: ConnectivityManagerNetworkMonitor): NetworkMonitor
 
     companion object {
 
