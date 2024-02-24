@@ -11,4 +11,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
 
     }
 
+    override fun subscribeEvent() {
+        // Not yet implemented
+    }
+
 }

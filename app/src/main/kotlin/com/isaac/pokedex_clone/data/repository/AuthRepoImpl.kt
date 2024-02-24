@@ -5,8 +5,8 @@ import com.isaac.pokedex_clone.data.remote.AuthService
 import com.isaac.pokedex_clone.data.remote.body.LoginBody
 import com.isaac.pokedex_clone.data.remote.retrofit.ApiResponse
 import com.isaac.pokedex_clone.domain.repository.AuthRepository
-import com.isaac.pokedex_clone.utils.AppDispatcher
-import com.isaac.pokedex_clone.utils.DispatcherType
+import com.isaac.pokedex_clone.di.AppDispatcher
+import com.isaac.pokedex_clone.di.DispatcherType
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import java.util.concurrent.atomic.AtomicInteger

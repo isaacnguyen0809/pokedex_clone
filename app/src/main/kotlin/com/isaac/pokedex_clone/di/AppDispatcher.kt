@@ -1,4 +1,4 @@
-package com.isaac.pokedex_clone.utils
+package com.isaac.pokedex_clone.di
 
 import dagger.Module
 import dagger.Provides

@@ -11,7 +11,10 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding
         binding.btBack.setOnClickListener {
             findNavController().popBackStack()
         }
+    }
 
+    override fun subscribeEvent() {
+       // Not yet implemented
     }
 
 }

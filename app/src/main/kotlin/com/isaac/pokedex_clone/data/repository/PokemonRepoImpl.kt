@@ -4,8 +4,8 @@ import com.isaac.pokedex_clone.data.model.ListPokemonResponse
 import com.isaac.pokedex_clone.data.remote.PokemonService
 import com.isaac.pokedex_clone.data.remote.retrofit.ApiResponse
 import com.isaac.pokedex_clone.domain.repository.PokemonRepository
-import com.isaac.pokedex_clone.utils.AppDispatcher
-import com.isaac.pokedex_clone.utils.DispatcherType
+import com.isaac.pokedex_clone.di.AppDispatcher
+import com.isaac.pokedex_clone.di.DispatcherType
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

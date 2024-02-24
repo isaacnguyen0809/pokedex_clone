@@ -3,8 +3,8 @@ package com.isaac.pokedex_clone.data.repository
 import androidx.datastore.core.DataStore
 import com.isaac.pokedex.clone.UserLocal
 import com.isaac.pokedex_clone.domain.repository.UserLocalRepository
-import com.isaac.pokedex_clone.utils.AppDispatcher
-import com.isaac.pokedex_clone.utils.DispatcherType
+import com.isaac.pokedex_clone.di.AppDispatcher
+import com.isaac.pokedex_clone.di.DispatcherType
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

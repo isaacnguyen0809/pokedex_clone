@@ -38,4 +38,7 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
         }
     }
 
+    override fun subscribeEvent() {
+        // Not yet implemented
+    }
 }

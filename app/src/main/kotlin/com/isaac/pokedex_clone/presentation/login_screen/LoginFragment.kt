@@ -2,13 +2,17 @@ package com.isaac.pokedex_clone.presentation.login_screen
 
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
+import com.isaac.pokedex_clone.common.eventbus.EventType
 import com.isaac.pokedex_clone.databinding.FragmentLoginBinding
 import com.isaac.pokedex_clone.presentation.base.BaseFragment
 import com.isaac.pokedex_clone.utils.NavigationEvent
+import com.isaac.pokedex_clone.utils.collectAndRepeatFlowWithLifecycle
 import com.isaac.pokedex_clone.utils.collectEvent
 import com.isaac.pokedex_clone.utils.collectIn
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 
 @AndroidEntryPoint
@@ -41,6 +45,16 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         viewModel.navigationEventFlow.collectEvent(this) {
             if (it == NavigationEvent.NavigateToLogin) {
                 findNavController().popBackStack()
+            }
+        }
+    }
+
+    override fun subscribeEvent() {
+        eventBus.eventFlow.collectAndRepeatFlowWithLifecycle(
+            minActiveState = Lifecycle.State.CREATED
+        ) {
+            if(it is EventType.EventNetworkStatus) {
+                Timber.d("EVENT : $it")
             }
         }
     }

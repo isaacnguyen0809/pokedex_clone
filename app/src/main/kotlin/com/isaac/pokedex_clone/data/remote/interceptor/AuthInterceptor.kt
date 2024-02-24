@@ -5,8 +5,8 @@ import com.isaac.pokedex_clone.data.remote.AuthService.Factory.CUSTOM_HEADER
 import com.isaac.pokedex_clone.data.remote.AuthService.Factory.NO_AUTH
 import com.isaac.pokedex_clone.data.remote.body.RefreshTokenBody
 import com.isaac.pokedex_clone.domain.repository.UserLocalRepository
-import com.isaac.pokedex_clone.utils.AppDispatcher
-import com.isaac.pokedex_clone.utils.DispatcherType
+import com.isaac.pokedex_clone.di.AppDispatcher
+import com.isaac.pokedex_clone.di.DispatcherType
 import com.isaac.pokedex_clone.utils.onError
 import com.isaac.pokedex_clone.utils.onSuccess
 import kotlinx.coroutines.CoroutineDispatcher

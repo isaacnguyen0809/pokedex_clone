@@ -7,11 +7,12 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import com.isaac.pokedex_clone.common.eventbus.EventBus
 import javax.inject.Inject
 
 
 abstract class BaseFragment<VB : ViewBinding>(
-    private val inflate: (LayoutInflater, ViewGroup?, Boolean) -> VB
+    private val inflate: (LayoutInflater, ViewGroup?, Boolean) -> VB,
 ) : Fragment() {
     private var _binding: VB? = null
 
@@ -20,11 +21,14 @@ abstract class BaseFragment<VB : ViewBinding>(
     @Inject
     lateinit var loadingDialogManager: LoadingDialogManager
 
+    @Inject
+    lateinit var eventBus: EventBus
+
     @CallSuper
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         return inflate(inflater, container, false).also { _binding = it }.root
     }
@@ -32,6 +36,7 @@ abstract class BaseFragment<VB : ViewBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupView()
+        subscribeEvent()
     }
 
     protected abstract fun setupView()
@@ -41,5 +46,7 @@ abstract class BaseFragment<VB : ViewBinding>(
         _binding = null
         super.onDestroyView()
     }
+
+    protected abstract fun subscribeEvent()
 }
 

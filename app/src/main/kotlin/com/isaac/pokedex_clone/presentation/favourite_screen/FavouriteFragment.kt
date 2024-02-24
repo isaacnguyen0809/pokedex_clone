@@ -7,4 +7,7 @@ class FavouriteFragment : BaseFragment<FragmentFavouriteBinding>(FragmentFavouri
     override fun setupView() {
     }
 
+    override fun subscribeEvent() {
+        // Not yet implemented
+    }
 }

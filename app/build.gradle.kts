@@ -75,6 +75,8 @@ android {
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime)
+    implementation(libs.androidx.lifecycle.process)
     implementation(libs.androidx.palette)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
