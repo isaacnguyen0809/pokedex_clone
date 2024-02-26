@@ -11,6 +11,7 @@ import com.isaac.pokedex_clone.R
 import com.isaac.pokedex_clone.databinding.ActivityMainBinding
 import com.isaac.pokedex_clone.utils.NetworkMonitor
 import com.isaac.pokedex_clone.utils.collectIn
+import com.isaac.pokedex_clone.utils.triggerAnim
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import javax.inject.Inject
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun observeNetworkConnection() {
         networkMonitor.isOnline.collectIn(this) {
-            binding.cardViewInternet.isVisible = !it
+            binding.cardViewInternet.triggerAnim(isShow = it.not())
         }
     }
 

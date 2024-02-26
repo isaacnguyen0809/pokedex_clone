@@ -47,9 +47,7 @@ class LoginViewModel @Inject constructor(
                     _uiMutableStateFlow.value = LoginUiState.Success(it)
                     _navigationEventFlow.value = object : UiEvent<NavigationEvent> {
                         override val data: NavigationEvent = NavigationEvent.NavigateToLogin
-                        override val onConsumed: () -> Unit = {
-                            _navigationEventFlow.update { null }
-                        }
+                        override val onConsumed: () -> Unit = { _navigationEventFlow.update { null } }
                     }
                 }.onException {
                     _uiMutableStateFlow.value = LoginUiState.Error(it)

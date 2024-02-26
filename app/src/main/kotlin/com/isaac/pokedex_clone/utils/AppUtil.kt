@@ -1,9 +1,13 @@
 package com.isaac.pokedex_clone.utils
 
+import android.view.View
+import android.view.animation.AnimationUtils
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.isaac.pokedex_clone.R
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -55,4 +59,23 @@ suspend inline fun <R> runSuspendCatching(block: () -> R): Result<R> {
     } catch (e: Throwable) {
         Result.failure(e)
     }
+}
+
+fun View.triggerAnim(isShow: Boolean) {
+    val openEnter = AnimationUtils.loadAnimation(
+        this.context, R.anim.fragment_open_enter
+    ).also {
+        it.duration = 500
+    }
+    val openExit = AnimationUtils.loadAnimation(
+        this.context, R.anim.fragment_open_exit
+    )
+    if (isShow) {
+        this.startAnimation(openEnter)
+        this.isVisible = true
+    } else {
+        this.startAnimation(openExit)
+        this.isVisible = false
+    }
+
 }

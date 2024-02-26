@@ -7,6 +7,8 @@ import com.isaac.pokedex_clone.databinding.FragmentHomeBinding
 import com.isaac.pokedex_clone.presentation.base.BaseFragment
 import com.isaac.pokedex_clone.presentation.home_screen.viewmodel.HomeUiState
 import com.isaac.pokedex_clone.presentation.home_screen.viewmodel.HomeViewModel
+import com.isaac.pokedex_clone.utils.OneTimeEvent
+import com.isaac.pokedex_clone.utils.collectEvent
 import com.isaac.pokedex_clone.utils.collectIn
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,20 +35,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     private fun observeData() {
         homeViewModel.uiStateFlow.collectIn(this) {
-            when (it) {
-                is HomeUiState.Loading -> {
-                    loadingDialogManager.showLoading(true)
-                }
-
-                is HomeUiState.Success -> {
-                    loadingDialogManager.showLoading(false)
-                    pokemonAdapter.submitList(it.data)
-                }
-
-                is HomeUiState.Error -> {
-                    loadingDialogManager.showLoading(false)
-                    Toast.makeText(requireContext(), "${it.error}", Toast.LENGTH_LONG).show()
-                }
+            if (it is HomeUiState.Success) {
+                pokemonAdapter.submitList(it.data)
+            }
+            loadingDialogManager.showLoading(it is HomeUiState.Loading)
+        }
+        homeViewModel.errorEventFlow.collectEvent(this) {
+            if (it is OneTimeEvent.Toast) {
+                Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
             }
         }
     }
