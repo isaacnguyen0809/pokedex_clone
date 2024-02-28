@@ -25,18 +25,15 @@ class LoginViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _uiMutableStateFlow = MutableStateFlow<LoginUiState>(LoginUiState.Initial)
-
     val uiStateFlow = _uiMutableStateFlow.asStateFlow()
 
     val userFlow: Flow<UserLocal?> = authUseCase.getUser().distinctUntilChanged()
 
     private val _demoStateFlow = MutableStateFlow("")
-
     val demoStateFlow = _demoStateFlow.asStateFlow()
 
     private val _navigationEventFlow = MutableStateFlow<UiEvent<NavigationEvent>?>(null)
     val navigationEventFlow = _navigationEventFlow.asStateFlow()
-
 
     fun login() {
         viewModelScope.launch {

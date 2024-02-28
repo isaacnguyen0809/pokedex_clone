@@ -26,6 +26,7 @@ class HomeViewModel @Inject constructor(
     val uiStateFlow = _uiMutableStateFlow.asStateFlow()
 
     private val _errorEventFlow = MutableStateFlow<UiEvent<OneTimeEvent>?>(null)
+
     val errorEventFlow = _errorEventFlow.asStateFlow()
 
     init {
@@ -33,32 +34,77 @@ class HomeViewModel @Inject constructor(
         getListPokemon()
     }
 
-    private fun getListPokemon() {
+    fun getListPokemon(isRefresh: Boolean = false) {
+        _uiMutableStateFlow.value = if (isRefresh) HomeUiState.RefreshList else HomeUiState.Loading
         viewModelScope.launch {
-            getListPokemonUseCase.invoke(LIMIT, OFF_SET)
-                .onSuccess {
-                    _uiMutableStateFlow.value = HomeUiState.Success(it.result)
+            getListPokemonUseCase.invoke(page = 0).onSuccess {
+                _uiMutableStateFlow.value = HomeUiState.Success(
+                    data = it.result,
+                    currentPage = 1,
+                    isLoadingNextPage = false,
+                )
+            }.onError { code, message, errorBody ->
+                _uiMutableStateFlow.value = HomeUiState.Error(Exception())
+                _errorEventFlow.value = object : UiEvent<OneTimeEvent> {
+                    override val data: OneTimeEvent = OneTimeEvent.Toast(code, message, errorBody)
+                    override val onConsumed: () -> Unit = { _errorEventFlow.update { null } }
                 }
-                .onError { code, message, errorBody ->
-                    _uiMutableStateFlow.value = HomeUiState.Error(Exception())
-                    _errorEventFlow.value = object : UiEvent<OneTimeEvent> {
-                        override val data: OneTimeEvent = OneTimeEvent.Toast(code, message, errorBody)
-                        override val onConsumed: () -> Unit = { _errorEventFlow.update { null } }
-                    }
+            }.onException {
+                _uiMutableStateFlow.value = HomeUiState.Error(Exception())
+                _errorEventFlow.value = object : UiEvent<OneTimeEvent> {
+                    override val data: OneTimeEvent = OneTimeEvent.Toast(message = it.message)
+                    override val onConsumed: () -> Unit = { _errorEventFlow.update { null } }
                 }
-                .onException {
-                    _uiMutableStateFlow.value = HomeUiState.Error(Exception())
-                    _errorEventFlow.value = object : UiEvent<OneTimeEvent> {
-                        override val data: OneTimeEvent = OneTimeEvent.Toast(message = it.message)
-                        override val onConsumed: () -> Unit = { _errorEventFlow.update { null } }
-                    }
-                }
+            }
         }
-
     }
 
-    companion object {
-        private const val LIMIT = 20
-        private const val OFF_SET = 0
+
+    internal fun loadNextPage(execute: () -> Unit) {
+        val currentUiState = _uiMutableStateFlow.value
+        if (currentUiState !is HomeUiState.Success) {
+            // ignore, not ready to load next page
+            return
+        }
+        // call 1 time only
+        if (!currentUiState.isLoadingNextPage) {
+            // toggle loading next page
+            _uiMutableStateFlow.update {
+                currentUiState.copy(
+                    isLoadingNextPage = true,
+                )
+            }
+            execute.invoke()
+            val nextPage = currentUiState.currentPage + 1
+
+            viewModelScope.launch {
+                getListPokemonUseCase.invoke(nextPage).onSuccess { data ->
+                    _uiMutableStateFlow.update {
+                        HomeUiState.Success(
+                            data = (currentUiState.data + data.result),
+                            currentPage = nextPage,
+                            isLoadingNextPage = false,
+                        )
+                    }
+                }.onException {
+                    _uiMutableStateFlow.update {
+                        HomeUiState.Success(
+                            data = (currentUiState.data),
+                            currentPage = currentUiState.currentPage,
+                            isLoadingNextPage = false,
+                        )
+                    }
+                }.onError { code, message, errorResponse ->
+                    _uiMutableStateFlow.update {
+                        HomeUiState.Success(
+                            data = (currentUiState.data),
+                            currentPage = currentUiState.currentPage,
+                            isLoadingNextPage = false,
+                        )
+                    }
+                }
+            }
+        }
     }
+
 }

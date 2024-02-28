@@ -9,14 +9,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.isaac.pokedex_clone.R
 import com.isaac.pokedex_clone.data.model.PokemonResponse
+import com.isaac.pokedex_clone.databinding.ItemLoadingBinding
 import com.isaac.pokedex_clone.databinding.ItemPokemonBinding
+import com.isaac.pokedex_clone.utils.Constants
 import com.isaac.pokedex_clone.utils.loadImageUrl
 
 private object PokemonDiffItemCallBack : DiffUtil.ItemCallback<PokemonResponse>() {
@@ -25,18 +27,41 @@ private object PokemonDiffItemCallBack : DiffUtil.ItemCallback<PokemonResponse>(
 }
 
 class PokemonAdapter(val fragment: Fragment) :
-    ListAdapter<PokemonResponse, PokemonAdapter.ViewHolder>(PokemonDiffItemCallBack) {
+    ListAdapter<PokemonResponse, ViewHolder>(PokemonDiffItemCallBack) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-        ViewHolder(ItemPokemonBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), position + 1)
+    override fun getItemViewType(position: Int): Int {
+        return if (this.currentList[position] == null) {
+            Constants.VIEW_ITEM_LOADING
+        } else {
+            Constants.VIEW_ITEM_TYPE
+        }
     }
 
-    inner class ViewHolder(
-        private val binding: ItemPokemonBinding
-    ) : RecyclerView.ViewHolder(binding.root) {
+    fun addShowLoadingView() {
+        submitList(currentList + null)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return if (viewType == Constants.VIEW_ITEM_TYPE) {
+            ItemViewHolder(ItemPokemonBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        } else {
+            LoadingViewHolder(ItemLoadingBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        }
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        if (holder is ItemViewHolder) {
+            holder.bind(getItem(position), position + 1)
+        }
+    }
+
+    inner class LoadingViewHolder(
+        binding: ItemLoadingBinding,
+    ) : ViewHolder(binding.root)
+
+    inner class ItemViewHolder(
+        private val binding: ItemPokemonBinding,
+    ) : ViewHolder(binding.root) {
         fun bind(item: PokemonResponse, position: Int) {
             val context = binding.root.context
             binding.root.setOnClickListener {
@@ -47,7 +72,7 @@ class PokemonAdapter(val fragment: Fragment) :
                     e: GlideException?,
                     model: Any?,
                     target: Target<Drawable>,
-                    isFirstResource: Boolean
+                    isFirstResource: Boolean,
                 ): Boolean = false
 
                 override fun onResourceReady(
@@ -55,7 +80,7 @@ class PokemonAdapter(val fragment: Fragment) :
                     model: Any,
                     target: Target<Drawable>?,
                     dataSource: DataSource,
-                    isFirstResource: Boolean
+                    isFirstResource: Boolean,
                 ): Boolean {
                     Palette.from(resource.toBitmap()).generate { palette ->
                         palette?.lightMutedSwatch?.rgb?.let {
@@ -67,7 +92,6 @@ class PokemonAdapter(val fragment: Fragment) :
                     return false
                 }
             })
-
 
             binding.run {
                 this.tvName.text = item.name.replaceFirstChar { it.uppercase() }

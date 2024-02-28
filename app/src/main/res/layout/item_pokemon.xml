@@ -51,7 +51,7 @@
             android:textColor="#3A3337"
             android:textSize="@dimen/_16ssp"
             android:textStyle="bold"
-            tools:text="Bulbasaur" />
+            tools:text="asdasd" />
 
     </LinearLayout>
 

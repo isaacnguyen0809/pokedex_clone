@@ -8,9 +8,6 @@ import javax.inject.Inject
 class GetListPokemonUseCase @Inject constructor(
     private val pokemonRepository: PokemonRepository,
 ) {
-    suspend operator fun invoke(limit: Int, offset: Int): ApiResponse<ListPokemonResponse> =
-        pokemonRepository.fetchPokemonList(
-            limit = limit,
-            offset = offset,
-        )
+    suspend operator fun invoke(page: Int): ApiResponse<ListPokemonResponse> =
+        pokemonRepository.fetchPokemonList(page)
 }
