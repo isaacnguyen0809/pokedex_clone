@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.DiffUtil
@@ -64,10 +65,16 @@ class PokemonAdapter(val fragment: Fragment) :
     ) : ViewHolder(binding.root) {
         fun bind(item: PokemonResponse, position: Int) {
             val context = binding.root.context
+            val extras = FragmentNavigatorExtras(binding.ivPokemon to item.getImageUrl())
+            binding.ivPokemon.transitionName = item.getImageUrl()
             binding.root.setOnClickListener {
-                fragment.findNavController().navigate(R.id.action_homeFragment_to_detailFragment)
+                val directions = HomeFragmentDirections.actionHomeFragmentToDetailFragment(item,position.toString())
+                fragment.findNavController().navigate(
+                    directions,
+                    extras
+                )
             }
-            binding.imageView.loadImageUrl(item.getImageUrl(), object : RequestListener<Drawable> {
+            binding.ivPokemon.loadImageUrl(item.getImageUrl(), object : RequestListener<Drawable> {
                 override fun onLoadFailed(
                     e: GlideException?,
                     model: Any?,
@@ -99,6 +106,5 @@ class PokemonAdapter(val fragment: Fragment) :
             }
         }
     }
-
 
 }

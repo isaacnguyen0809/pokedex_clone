@@ -97,3 +97,4 @@ kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger-hilt" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobuf" }
+navigation-safe-args = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation-fragment-ktx" }

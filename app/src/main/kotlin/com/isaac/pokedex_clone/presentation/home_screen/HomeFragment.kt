@@ -2,6 +2,7 @@ package com.isaac.pokedex_clone.presentation.home_screen
 
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +27,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private val viewModel by viewModels<HomeViewModel>()
 
     override fun setupView() {
+
         setupRecyclerView()
         observeData()
         binding.swipeRefreshLayout.setOnRefreshListener {
@@ -33,24 +35,28 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
         val refreshColor = ContextCompat.getColor(requireContext(), R.color.mauvelous)
         binding.swipeRefreshLayout.setColorSchemeColors(refreshColor)
-
     }
 
     private fun setupRecyclerView() {
+        postponeEnterTransition()
+        binding.rvPokemon.doOnPreDraw {
+            startPostponedEnterTransition()
+        }
         binding.rvPokemon.run {
-            layoutManager = GridLayoutManager(context, 2)
+            layoutManager = GridLayoutManager(context, 2).apply {
+                spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                    override fun getSpanSize(position: Int): Int {
+                        return when (pokemonAdapter.getItemViewType(position)) {
+                            Constants.VIEW_ITEM_TYPE -> 1
+                            Constants.VIEW_ITEM_LOADING -> 2
+                            else -> -1
+                        }
+                    }
+                }
+            }
             adapter = pokemonAdapter
         }
         val gridLayoutManager = binding.rvPokemon.layoutManager as GridLayoutManager
-        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return when (pokemonAdapter.getItemViewType(position)) {
-                    Constants.VIEW_ITEM_TYPE -> 1
-                    Constants.VIEW_ITEM_LOADING -> 2
-                    else -> -1
-                }
-            }
-        }
 
         binding.rvPokemon.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

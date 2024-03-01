@@ -16,7 +16,14 @@
             android:id="@+id/detailFragment"
             android:name="com.isaac.pokedex_clone.presentation.detail_screen.DetailFragment"
             android:label="fragment_detail"
-            tools:layout="@layout/fragment_detail" />
+            tools:layout="@layout/fragment_detail">
+            <argument
+                android:name="itemPokemon"
+                app:argType="com.isaac.pokedex_clone.data.model.PokemonResponse" />
+            <argument
+                android:name="position"
+                app:argType="string" />
+        </fragment>
         <fragment
             android:id="@+id/homeFragment"
             android:name="com.isaac.pokedex_clone.presentation.home_screen.HomeFragment"
@@ -30,6 +37,7 @@
                 app:popEnterAnim="@anim/fragment_close_enter"
                 app:popExitAnim="@anim/fragment_close_exit" />
         </fragment>
+
     </navigation>
     <navigation
         android:id="@+id/profile_nav"
@@ -58,5 +66,5 @@
         android:id="@+id/loginFragment"
         android:name="com.isaac.pokedex_clone.presentation.login_screen.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login"/>
+        tools:layout="@layout/fragment_login" />
 </navigation>
