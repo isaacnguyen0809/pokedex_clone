@@ -20,6 +20,7 @@
             android:layout_height="@dimen/_260sdp"
             android:background="@color/mauvelous"
             android:elevation="@dimen/_3sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
             app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.CardView" />
     </FrameLayout>
 

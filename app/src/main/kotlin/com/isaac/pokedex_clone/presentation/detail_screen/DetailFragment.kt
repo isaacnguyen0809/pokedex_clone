@@ -1,6 +1,7 @@
 package com.isaac.pokedex_clone.presentation.detail_screen
 
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.transition.TransitionInflater
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.viewModels
@@ -52,10 +53,19 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding
                 isFirstResource: Boolean,
             ): Boolean {
                 Palette.from(resource.toBitmap()).generate { palette ->
-                    palette?.lightMutedSwatch?.rgb?.let {
-                        binding.header.setBackgroundColor(
-                            it
-                        )
+                    val startColor = palette?.lightMutedSwatch?.rgb
+                    val endColor = palette?.dominantSwatch?.rgb
+
+                    if (startColor != null && endColor != null) {
+                        binding.header.setBackgroundDrawable(GradientDrawable().apply {
+                            colors = intArrayOf(
+                                startColor,
+                                endColor
+                            )
+                            orientation = GradientDrawable.Orientation.TOP_BOTTOM
+                            gradientType = GradientDrawable.LINEAR_GRADIENT
+                            shape = GradientDrawable.RECTANGLE
+                        })
                     }
                 }
                 return false
