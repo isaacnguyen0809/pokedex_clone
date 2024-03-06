@@ -97,6 +97,7 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.startup.runtime)
     implementation(libs.timber)
+    implementation(libs.androidx.swiperefreshlayout)
 
     implementation(libs.androidx.datastore)
     implementation(libs.protobuf.javalite)

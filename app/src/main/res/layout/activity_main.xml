@@ -35,7 +35,7 @@
         app:cardCornerRadius="@dimen/_8sdp"
         android:layout_margin="@dimen/_12sdp"
         app:strokeColor="@color/transparent"
-        app:cardBackgroundColor="@color/purple"
+        app:cardBackgroundColor="@color/mauvelous"
         app:layout_constraintBottom_toBottomOf="@+id/frgContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -54,6 +54,9 @@
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:itemIconTint="@color/mauvelous"
+        app:itemTextColor="@color/mauvelous"
+        app:itemActiveIndicatorStyle="@style/Active.Indicator"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

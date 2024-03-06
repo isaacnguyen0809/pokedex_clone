@@ -15,6 +15,8 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
 
     private val viewModel by viewModels<LoginViewModel>()
 
+    private val loginViewModel by viewModels<LoginViewModel>()
+
     override fun setupView() {
         binding.btLogout.setOnClickListener {
             viewModel.logout()
@@ -35,6 +37,11 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
 
         viewModel.demoStateFlow.collectIn(this) {
             binding.demoValue.text = it
+        }
+
+        loginViewModel.userFlow.collectIn(this) {
+            binding.btDemo.isVisible = it != null
+            binding.demoValue.isVisible = it != null
         }
     }
 

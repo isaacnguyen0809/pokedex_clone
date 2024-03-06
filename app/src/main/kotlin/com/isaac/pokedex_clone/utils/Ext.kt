@@ -20,7 +20,7 @@ fun ImageView.loadImageUrl(url: String?, requestListener: RequestListener<Drawab
         .load(url)
         .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
         .placeholder(R.drawable.pokeball)
-        .error(R.drawable.ic_home)
+        .error(R.drawable.pokeball)
         .listener(requestListener)
         .into(this)
 }

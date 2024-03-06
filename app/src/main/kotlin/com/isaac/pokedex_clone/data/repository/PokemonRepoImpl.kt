@@ -14,11 +14,15 @@ class PokemonRepoImpl @Inject constructor(
     private val pokemonService: PokemonService,
     @AppDispatcher(DispatcherType.IO) private val ioDispatcher: CoroutineDispatcher,
 ) : PokemonRepository {
-    override suspend fun fetchPokemonList(limit: Int, offset: Int): ApiResponse<ListPokemonResponse> =
+    override suspend fun fetchPokemonList(page: Int): ApiResponse<ListPokemonResponse> =
         withContext(ioDispatcher) {
             pokemonService.fetchPokemonList(
-                limit = limit,
-                offset = offset,
+                limit = PAGING_SIZE,
+                offset = page * PAGING_SIZE,
             )
         }
+
+    companion object {
+        private const val PAGING_SIZE = 20
+    }
 }

@@ -1,6 +1,7 @@
 <resources>
     <style name="Theme.App" parent="Theme.Material3.Light.NoActionBar">
-        <item name="colorPrimaryDark">@color/purple</item>
+        <item name="colorPrimaryDark">@color/mauvelous</item>
+        <item name="colorPrimary">@color/mauvelous</item>
     </style>
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
@@ -21,5 +22,9 @@
         <item name="cornerSizeBottomLeft">@dimen/_10sdp</item>
         <item name="cornerSizeBottomRight">@dimen/_10sdp</item>
         <item name="cornerFamily">rounded</item>
+    </style>
+
+    <style name="Active.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/pink</item>
     </style>
 </resources>
