@@ -8,9 +8,11 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.isaac.pokedex_clone.R
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -24,6 +26,18 @@ inline fun <T> Flow<T>.collectIn(
 ): Job = owner.lifecycleScope.launch {
     owner.lifecycle.repeatOnLifecycle(state = minActiveState) {
         collect { action(it) }
+    }
+}
+
+inline fun <T> Flow<T>.collectEventChannel(
+    owner: LifecycleOwner,
+    minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
+    crossinline action: suspend (value: T) -> Unit,
+): Job = owner.lifecycleScope.launch {
+    owner.lifecycle.repeatOnLifecycle(state = minActiveState) {
+        withContext(Dispatchers.Main.immediate) {
+            collect { action(it) }
+        }
     }
 }
 
@@ -78,4 +92,30 @@ fun View.triggerAnim(isShow: Boolean) {
         this.isVisible = false
     }
 
+}
+
+object PokemonTypeUtils {
+
+    fun getTypeColor(type: String): Int {
+        return when (type) {
+            "fighting" -> R.color.fighting
+            "flying" -> R.color.flying
+            "poison" -> R.color.poison
+            "ground" -> R.color.ground
+            "rock" -> R.color.rock
+            "bug" -> R.color.bug
+            "ghost" -> R.color.ghost
+            "steel" -> R.color.steel
+            "fire" -> R.color.fire
+            "water" -> R.color.water
+            "grass" -> R.color.grass
+            "electric" -> R.color.electric
+            "psychic" -> R.color.psychic
+            "ice" -> R.color.ice
+            "dragon" -> R.color.dragon
+            "fairy" -> R.color.fairy
+            "dark" -> R.color.dark
+            else -> R.color.gray_21
+        }
+    }
 }
