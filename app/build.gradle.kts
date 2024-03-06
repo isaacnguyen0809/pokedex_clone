@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.dagger.hilt)
     alias(libs.plugins.protobuf)
     alias(libs.plugins.kapt)
+    alias(libs.plugins.navigation.safe.args)
 }
 
 android {

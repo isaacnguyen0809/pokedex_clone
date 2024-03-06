@@ -46,7 +46,17 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
         navController.addOnDestinationChangedListener { _, destination, _ ->
             Timber.d("Destination: ${destination}")
-            binding.bottomNavigationView.isVisible = destination.id != R.id.loginFragment
+            when(destination.id){
+                R.id.loginFragment -> {
+                    binding.bottomNavigationView.isVisible = false
+                }
+                R.id.detailFragment -> {
+                    binding.bottomNavigationView.isVisible = false
+                }
+                else -> {
+                    binding.bottomNavigationView.isVisible = true
+                }
+            }
         }
         binding.bottomNavigationView.setupWithNavController(navController)
     }
