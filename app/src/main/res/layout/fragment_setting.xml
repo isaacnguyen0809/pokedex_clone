@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".presentation.profile_screen.SettingFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_60sdp"
+        android:layout_marginVertical="@dimen/_20sdp"
+        android:fontFamily="@font/grostesk"
+        android:text="This page is buiding for test simple authentication flow with refresh token"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_20ssp" />
+
+    <Button
+        android:id="@+id/bt_logout"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Logout" />
+
+    <Button
+        android:id="@+id/bt_login"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Sign in" />
+
+    <TextView
+        android:id="@+id/loginValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/_12sdp"
+        tools:text="DUMMY TEXT" />
+
+    <Button
+        android:id="@+id/bt_demo"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Call DEMO" />
+
+    <TextView
+        android:id="@+id/demoValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/_12sdp"
+        tools:text="DUMMY TEXT" />
+
+</LinearLayout>
