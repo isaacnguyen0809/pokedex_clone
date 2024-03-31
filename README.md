@@ -5,5 +5,5 @@ I built this project from scratch, it includes :
 + Show list pokemon with paging
 (TEMP) Video demo :
 
-https://github.com/isaacnguyen0809/pokedex_clone/assets/57831153/e1c8bc23-f568-485b-93e0-6ec639228467
+![demo_gì](https://github.com/isaacnguyen0809/pokedex_clone/assets/57831153/bfc4c864-d497-4a89-8e22-d96b747b621c)
 
