@@ -31,6 +31,7 @@ swiperefreshlayout = "1.2.0-alpha01"
 timber = "5.0.1"
 protobuf = "0.9.4"
 tink-android = "1.8.0"
+room = "2.6.1"
 [libraries]
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "androidx-lifecycle-viewmodel-ktx" }
@@ -78,6 +79,10 @@ sdp-android = { module = "com.intuit.sdp:sdp-android", version.ref = "sdp-androi
 ssp-android = { module = "com.intuit.ssp:ssp-android", version.ref = "ssp-android" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 tink-android = { module = "com.google.crypto.tink:tink-android", version.ref = "tink-android" }
+# ROOM
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 [bundles]
 moshi = [
     "moshi",
