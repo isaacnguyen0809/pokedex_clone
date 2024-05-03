@@ -58,11 +58,10 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding
         setUpShareElementTransition()
         viewModel.getPokemonInfo(args.itemPokemon.name)
         binding.index.text = getString(R.string.pokemon_number, args.position)
-
         binding.tvName.text = args.itemPokemon.name.replaceFirstChar { it.uppercase() }
 
-        binding.ivPokemon.transitionName = args.itemPokemon.getImageUrl()
-        binding.ivPokemon.loadImageUrl(args.itemPokemon.getImageUrl(), object : RequestListener<Drawable> {
+        binding.ivPokemon.transitionName = args.itemPokemon.imgUrl
+        binding.ivPokemon.loadImageUrl(args.itemPokemon.imgUrl, object : RequestListener<Drawable> {
             override fun onLoadFailed(
                 e: GlideException?,
                 model: Any?,
@@ -105,7 +104,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding
 
         binding.ivBack.setOnClickListener {
             findNavController().popBackStack()
-            window.statusBarColor = ContextCompat.getColor(requireContext(),R.color.mauvelous)
+            window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.mauvelous)
         }
 
 

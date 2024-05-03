@@ -3,7 +3,7 @@ package com.isaac.pokedex_clone.presentation.home_screen
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.isaac.pokedex_clone.R
@@ -11,6 +11,7 @@ import com.isaac.pokedex_clone.databinding.FragmentHomeBinding
 import com.isaac.pokedex_clone.presentation.base.BaseFragment
 import com.isaac.pokedex_clone.presentation.home_screen.viewmodel.HomeUiState
 import com.isaac.pokedex_clone.presentation.home_screen.viewmodel.HomeViewModel
+import com.isaac.pokedex_clone.presentation.home_screen.viewmodel.LikedPokemonEvent
 import com.isaac.pokedex_clone.utils.Constants
 import com.isaac.pokedex_clone.utils.OneTimeEvent
 import com.isaac.pokedex_clone.utils.collectEvent
@@ -21,13 +22,17 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
     private val pokemonAdapter: PokemonAdapter by lazy(LazyThreadSafetyMode.NONE) {
-        PokemonAdapter(this)
+        PokemonAdapter(
+            this,
+            onLikedPokemon = {
+                viewModel.likePokemon(it)
+            },
+        )
     }
 
-    private val viewModel by viewModels<HomeViewModel>()
+    private val viewModel by activityViewModels<HomeViewModel>()
 
     override fun setupView() {
-
         setupRecyclerView()
         observeData()
         binding.swipeRefreshLayout.setOnRefreshListener {
@@ -35,6 +40,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
         val refreshColor = ContextCompat.getColor(requireContext(), R.color.mauvelous)
         binding.swipeRefreshLayout.setColorSchemeColors(refreshColor)
+
     }
 
     private fun setupRecyclerView() {
@@ -82,11 +88,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             }
             binding.swipeRefreshLayout.isRefreshing = false
             loadingDialogManager.showLoading(state is HomeUiState.Loading)
-
         }
         viewModel.errorEventFlow.collectEvent(this) {
             if (it is OneTimeEvent.Toast) {
                 Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+            }
+        }
+        viewModel.likedPokemonStateFlow.collectEvent(this) {
+            if (it is LikedPokemonEvent) {
+                val message = if (it.isLikedSuccessful) "Add favourite successful" else "Add favourite failed"
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             }
         }
     }
