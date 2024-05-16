@@ -5,14 +5,14 @@ import androidx.annotation.AnyThread
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.isaac.pokedex_clone.data.local.dao.FavouritePokemonDao
-import com.isaac.pokedex_clone.data.local.entity.FavouritePokemonEntity
+import com.isaac.pokedex_clone.data.local.dao.FavoritePokemonDao
+import com.isaac.pokedex_clone.data.local.entity.FavoritePokemonEntity
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
 @Database(
     entities = [
-        FavouritePokemonEntity::class,
+        FavoritePokemonEntity::class,
     ],
     version = 1,
     exportSchema = true
@@ -20,7 +20,7 @@ import java.util.concurrent.Executors
 
 
 abstract class PokemonDatabase : RoomDatabase() {
-    abstract fun favoritePokemonDao(): FavouritePokemonDao
+    abstract fun favoritePokemonDao(): FavoritePokemonDao
 
     companion object {
         private const val DB_NAME = "pokemon_app.db"

@@ -14,7 +14,7 @@
         android:layout_gravity="center"
         android:layout_marginHorizontal="@dimen/_12sdp"
         android:fontFamily="@font/grotesk_thin"
-        android:text="@string/no_favourite_pokemon"
+        android:text="@string/no_favorite_pokemon"
         android:textSize="@dimen/_12ssp"
         android:textStyle="bold" />
 
