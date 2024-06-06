@@ -2,7 +2,7 @@ package com.isaac.pokedex_clone.di
 
 import android.content.Context
 import com.isaac.pokedex_clone.data.local.PokemonDatabase
-import com.isaac.pokedex_clone.data.local.dao.FavouritePokemonDao
+import com.isaac.pokedex_clone.data.local.dao.FavoritePokemonDao
 import com.isaac.pokedex_clone.utils.AppDispatcher
 import com.isaac.pokedex_clone.utils.DispatcherType
 import dagger.Module
@@ -29,7 +29,7 @@ interface DatabaseModule {
         )
 
         @Provides
-        fun provideFavouritePokemonDao(pokemonDatabase: PokemonDatabase): FavouritePokemonDao =
+        fun provideFavoritePokemonDao(pokemonDatabase: PokemonDatabase): FavoritePokemonDao =
             pokemonDatabase.favoritePokemonDao()
     }
 }

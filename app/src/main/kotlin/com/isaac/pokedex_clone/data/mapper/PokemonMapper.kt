@@ -1,7 +1,7 @@
 package com.isaac.pokedex_clone.data.mapper
 
 import android.os.Parcelable
-import com.isaac.pokedex_clone.data.local.entity.FavouritePokemonEntity
+import com.isaac.pokedex_clone.data.local.entity.FavoritePokemonEntity
 import com.isaac.pokedex_clone.data.model.PokemonResponse
 import kotlinx.parcelize.Parcelize
 import java.util.UUID
@@ -11,10 +11,10 @@ data class Pokemon(
     val id: UUID,
     val name: String,
     val imgUrl: String,
-    val isFavourite: Boolean = false,
+    val isFavorite: Boolean = false,
 ) : Parcelable
 
-fun FavouritePokemonEntity.toDomain(): Pokemon = Pokemon(
+fun FavoritePokemonEntity.toDomain(): Pokemon = Pokemon(
     id = UUID.fromString(id),
     name = name,
     imgUrl = imgUrl,
@@ -26,7 +26,7 @@ fun PokemonResponse.toDomain(): Pokemon = Pokemon(
     imgUrl = getImageUrl(),
 )
 
-fun Pokemon.toEntity(): FavouritePokemonEntity = FavouritePokemonEntity(
+fun Pokemon.toEntity(): FavoritePokemonEntity = FavoritePokemonEntity(
     id = id.toString(),
     name = name,
     imgUrl = imgUrl,

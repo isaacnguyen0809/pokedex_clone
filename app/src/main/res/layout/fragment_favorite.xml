@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".presentation.favourite_screen.FavouriteFragment">
+    tools:context=".presentation.favorite_screen.FavoriteFragment">
 
     <TextView
         android:id="@+id/emptyLayout"

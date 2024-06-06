@@ -5,18 +5,17 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.isaac.pokedex_clone.data.local.entity.FavouritePokemonEntity
-import kotlinx.coroutines.flow.Flow
+import com.isaac.pokedex_clone.data.local.entity.FavoritePokemonEntity
 
 @Dao
-interface FavouritePokemonDao {
+interface FavoritePokemonDao {
 
-    @Query("SELECT * FROM favourite_pokemon ORDER BY name DESC")
-    suspend fun getAllFavouritePokemon(): List<FavouritePokemonEntity>
+    @Query("SELECT * FROM favorite_pokemon ORDER BY name DESC")
+    suspend fun getAllFavoritePokemon(): List<FavoritePokemonEntity>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insertPokemon(pokemon: FavouritePokemonEntity)
+    suspend fun insertPokemon(pokemon: FavoritePokemonEntity)
 
     @Delete
-    suspend fun delete(pokemon: FavouritePokemonEntity)
+    suspend fun delete(pokemon: FavoritePokemonEntity)
 }

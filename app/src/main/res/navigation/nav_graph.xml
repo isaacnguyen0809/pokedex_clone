@@ -9,7 +9,7 @@
         app:startDestination="@id/homeFragment">
         <fragment
             android:id="@+id/detailFragment"
-            android:name="com.isaac.pokedex_clone.presentation.detail_screen.DetailFragment"
+            android:name="com.isaac.pokedex_clone.presentation.detail.DetailFragment"
             android:label="fragment_detail"
             tools:layout="@layout/fragment_detail">
             <argument
@@ -21,7 +21,7 @@
         </fragment>
         <fragment
             android:id="@+id/homeFragment"
-            android:name="com.isaac.pokedex_clone.presentation.home_screen.HomeFragment"
+            android:name="com.isaac.pokedex_clone.presentation.home.HomeFragment"
             android:label="fragment_home"
             tools:layout="@layout/fragment_home">
             <action
@@ -64,12 +64,12 @@
         tools:layout="@layout/fragment_login" />
     <navigation
         android:id="@+id/fav_nav"
-        app:startDestination="@id/favouriteFragment">
+        app:startDestination="@id/favoriteFragment">
         <fragment
-            android:id="@+id/favouriteFragment"
-            android:name="com.isaac.pokedex_clone.presentation.favourite_screen.FavouriteFragment"
-            android:label="fragment_favourite"
-            tools:layout="@layout/fragment_favourite">
+            android:id="@+id/favoriteFragment"
+            android:name="com.isaac.pokedex_clone.presentation.favorite_screen.FavoriteFragment"
+            android:label="fragment_favorite"
+            tools:layout="@layout/fragment_favorite">
             <action
                 android:id="@+id/action_favFragment_to_detailFragment"
                 app:destination="@id/detailFragment"
@@ -80,7 +80,7 @@
         </fragment>
         <fragment
             android:id="@+id/detailFragment"
-            android:name="com.isaac.pokedex_clone.presentation.detail_screen.DetailFragment"
+            android:name="com.isaac.pokedex_clone.presentation.detail.DetailFragment"
             android:label="fragment_detail"
             tools:layout="@layout/fragment_detail">
             <argument

@@ -1,13 +1,13 @@
-package com.isaac.pokedex_clone.presentation.home_screen.viewmodel
+package com.isaac.pokedex_clone.presentation.home.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.isaac.pokedex_clone.data.mapper.Pokemon
 import com.isaac.pokedex_clone.data.mapper.toDomain
-import com.isaac.pokedex_clone.domain.usecase.FavouritePokemonUseCase
+import com.isaac.pokedex_clone.domain.usecase.FavoritePokemonUseCase
 import com.isaac.pokedex_clone.domain.usecase.GetListPokemonUseCase
-import com.isaac.pokedex_clone.presentation.favourite_screen.FavouriteUiState
+import com.isaac.pokedex_clone.presentation.favorite_screen.FavoriteUiState
 import com.isaac.pokedex_clone.utils.OneTimeEvent
 import com.isaac.pokedex_clone.utils.UiEvent
 import com.isaac.pokedex_clone.utils.onError
@@ -18,17 +18,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 data class LikedPokemonEvent(
     val isLikedSuccessful: Boolean,
 )
 
+data class DislikedPokemonEvent(
+    val isDislikedSuccessful: Boolean,
+)
+
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getListPokemonUseCase: GetListPokemonUseCase,
-    private val favouritePokemonUseCase: FavouritePokemonUseCase,
+    private val favoritePokemonUseCase: FavoritePokemonUseCase,
 ) : ViewModel() {
 
     private val _uiMutableStateFlow = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
@@ -40,28 +43,28 @@ class HomeViewModel @Inject constructor(
     private val _likedPokemonStateFlow = MutableStateFlow<UiEvent<LikedPokemonEvent>?>(null)
     val likedPokemonStateFlow = _likedPokemonStateFlow.asStateFlow()
 
-    private val _dislikeStateFlow = MutableStateFlow<UiEvent<OneTimeEvent>?>(null)
+    private val _dislikeStateFlow = MutableStateFlow<UiEvent<DislikedPokemonEvent>?>(null)
     val disLikeStateFlow = _dislikeStateFlow.asStateFlow()
 
-    private val _favorStateFlow = MutableStateFlow<FavouriteUiState>(FavouriteUiState.Loading)
+    private val _favorStateFlow = MutableStateFlow<FavoriteUiState>(FavoriteUiState.Loading)
     internal val favorStateFlow = _favorStateFlow.asStateFlow()
 
     init {
-        Timber.d("Init HomeViewModel")
-        getListPokemon()
-        getListFavourite()
     }
 
-    fun getListFavourite() {
+    fun getListFavorite() {
         viewModelScope.launch {
-            favouritePokemonUseCase.getAllListFavouritePokemon().onSuccess { result ->
+            _favorStateFlow.update{
+                FavoriteUiState.Loading
+            }
+            favoritePokemonUseCase.getAllListFavoritePokemon().onSuccess { result ->
                 _favorStateFlow.update {
-                    FavouriteUiState.Success(result)
+                    FavoriteUiState.Success(result)
                 }
             }
                 .onFailure { e ->
                     _favorStateFlow.update {
-                        FavouriteUiState.Error(e)
+                        FavoriteUiState.Error(e)
                     }
                 }
         }
@@ -70,16 +73,15 @@ class HomeViewModel @Inject constructor(
     fun likePokemon(pokemon: Pokemon) {
         viewModelScope.launch {
             _likedPokemonStateFlow.update {
-                val isSuccess = favouritePokemonUseCase.likePokemon(pokemon).isSuccess
+                val isSuccess = favoritePokemonUseCase.likePokemon(pokemon).isSuccess
                 if (isSuccess) {
-                    getListFavourite()
-                    favouritePokemonUseCase.getAllListFavouritePokemon().onSuccess { listFavourite ->
+                    favoritePokemonUseCase.getAllListFavoritePokemon().onSuccess { listFavorite ->
                         val currentState = _uiMutableStateFlow.value as HomeUiState.Success
                         val fullList = currentState.data.toMutableList()
                         fullList.forEachIndexed { index, pokemon ->
-                            listFavourite.forEach { inner ->
+                            listFavorite.forEach { inner ->
                                 if (pokemon?.name?.lowercase() == inner.name.lowercase()) {
-                                    fullList[index] = fullList[index]?.copy(isFavourite = true)
+                                    fullList[index] = fullList[index]?.copy(isFavorite = true)
                                 }
                             }
                         }
@@ -97,26 +99,24 @@ class HomeViewModel @Inject constructor(
     fun dislikePokemon(pokemon: Pokemon) {
         viewModelScope.launch {
             _dislikeStateFlow.update {
-                val isSuccess = favouritePokemonUseCase.unlikePokemon(pokemon).isSuccess
+                val isSuccess = favoritePokemonUseCase.unlikePokemon(pokemon).isSuccess
                 if (isSuccess) {
-                    favouritePokemonUseCase.getAllListFavouritePokemon().onSuccess { listFavourite ->
+                    favoritePokemonUseCase.getAllListFavoritePokemon().onSuccess { listFavorite ->
                         val currentState = _uiMutableStateFlow.value as HomeUiState.Success
                         val fullList =
-                            currentState.data.map { it?.copy(isFavourite = false) }.toMutableList()
+                            currentState.data.map { it?.copy(isFavorite = false) }.toMutableList()
                         fullList.forEachIndexed { index, pokemon ->
-                            listFavourite.forEach { inner ->
+                            listFavorite.forEach { inner ->
                                 if (pokemon?.name?.lowercase() == inner.name.lowercase()) {
-                                    fullList[index] = fullList[index]?.copy(isFavourite = true)
+                                    fullList[index] = fullList[index]?.copy(isFavorite = true)
                                 }
                             }
                         }
                         _uiMutableStateFlow.value = currentState.copy(data = fullList)
                     }
-                    getListFavourite()
                 }
-                val message = if (isSuccess) "Delete favourite successful" else "Delete favourite failed"
-                object : UiEvent<OneTimeEvent> {
-                    override val data: OneTimeEvent = OneTimeEvent.Toast(null, message, null)
+                object : UiEvent<DislikedPokemonEvent> {
+                    override val data: DislikedPokemonEvent = DislikedPokemonEvent(isSuccess)
                     override val onConsumed: () -> Unit = { _dislikeStateFlow.update { null } }
                 }
 
@@ -128,12 +128,12 @@ class HomeViewModel @Inject constructor(
         _uiMutableStateFlow.value = if (isRefresh) HomeUiState.RefreshList else HomeUiState.Loading
         viewModelScope.launch {
             getListPokemonUseCase.invoke(page = 0).onSuccess { data ->
-                favouritePokemonUseCase.getAllListFavouritePokemon().onSuccess { listFavourite ->
+                favoritePokemonUseCase.getAllListFavoritePokemon().onSuccess({ listFavorite ->
                     val fullList = data.result.map { it.toDomain() }.toMutableList()
                     fullList.forEachIndexed { index, pokemon ->
-                        listFavourite.forEach { inner ->
+                        listFavorite.forEach { inner ->
                             if (pokemon.name.lowercase() == inner.name.lowercase()) {
-                                fullList[index] = fullList[index].copy(isFavourite = true)
+                                fullList[index] = fullList[index].copy(isFavorite = true)
                             }
                         }
                     }
@@ -143,8 +143,12 @@ class HomeViewModel @Inject constructor(
                         isLoadingNextPage = false,
                     )
                 }
+                ).onFailure {
+                    Log.d("ISSAC", "getListPokemon getAllListFavoritePokemon failed ${it.message}")
+                }
 
             }.onError { code, message, errorBody ->
+                Log.d("ISSAC", "getListPokemon onError")
                 _uiMutableStateFlow.value = HomeUiState.Error(Exception())
                 _errorEventFlow.value = object : UiEvent<OneTimeEvent> {
                     override val data: OneTimeEvent = OneTimeEvent.Toast(code, message, errorBody)
@@ -177,12 +181,13 @@ class HomeViewModel @Inject constructor(
 
             viewModelScope.launch {
                 getListPokemonUseCase.invoke(nextPage).onSuccess { data ->
-                    favouritePokemonUseCase.getAllListFavouritePokemon().onSuccess { listFavourite ->
-                        val fullList = (currentUiState.data + data.result.map { it.toDomain() }).toMutableList()
+                    favoritePokemonUseCase.getAllListFavoritePokemon().onSuccess { listFavorite ->
+                        val fullList =
+                            (currentUiState.data + data.result.map { it.toDomain() }).toMutableList()
                         fullList.forEachIndexed { index, pokemon ->
-                            listFavourite.forEach { inner ->
+                            listFavorite.forEach { inner ->
                                 if (pokemon?.name?.lowercase() == inner.name.lowercase()) {
-                                    fullList[index] = fullList[index]?.copy(isFavourite = true)
+                                    fullList[index] = fullList[index]?.copy(isFavorite = true)
                                 }
                             }
                         }

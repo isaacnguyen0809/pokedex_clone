@@ -1,4 +1,4 @@
-package com.isaac.pokedex_clone.presentation.home_screen
+package com.isaac.pokedex_clone.presentation.home
 
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.isaac.pokedex_clone.R
 import com.isaac.pokedex_clone.databinding.FragmentHomeBinding
 import com.isaac.pokedex_clone.presentation.base.BaseFragment
-import com.isaac.pokedex_clone.presentation.home_screen.viewmodel.HomeUiState
-import com.isaac.pokedex_clone.presentation.home_screen.viewmodel.HomeViewModel
-import com.isaac.pokedex_clone.presentation.home_screen.viewmodel.LikedPokemonEvent
+import com.isaac.pokedex_clone.presentation.home.viewmodel.HomeUiState
+import com.isaac.pokedex_clone.presentation.home.viewmodel.HomeViewModel
+import com.isaac.pokedex_clone.presentation.home.viewmodel.LikedPokemonEvent
 import com.isaac.pokedex_clone.utils.Constants
 import com.isaac.pokedex_clone.utils.OneTimeEvent
 import com.isaac.pokedex_clone.utils.collectEvent
@@ -26,6 +26,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             this,
             onLikedPokemon = {
                 viewModel.likePokemon(it)
+            },
+            onDislikePokemon = {
+                viewModel.dislikePokemon(it)
             },
         )
     }
@@ -96,10 +99,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
         viewModel.likedPokemonStateFlow.collectEvent(this) {
             if (it is LikedPokemonEvent) {
-                val message = if (it.isLikedSuccessful) "Add favourite successful" else "Add favourite failed"
+                val message = if (it.isLikedSuccessful) "Add favorite successful" else "Add favorite failed"
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getListPokemon()
+        viewModel.getListFavorite()
     }
 
     override fun onDestroyView() {

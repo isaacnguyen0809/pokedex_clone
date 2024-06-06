@@ -15,6 +15,7 @@ data class PokemonInfo(
     val defense: Int = Random.nextInt(MAX_DEFENSE),
     val speed: Int = Random.nextInt(MAX_SPEED),
     val exp: Int = Random.nextInt(MAX_EXP),
+    val isFavorited: Boolean = false,
 ) {
 
     fun getIdString(): String = String.format("#%03d", id)
