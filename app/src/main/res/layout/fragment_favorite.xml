@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".presentation.favorite_screen.FavoriteFragment">
+
+    <TextView
+        android:id="@+id/emptyLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:fontFamily="@font/grotesk_thin"
+        android:text="@string/no_favorite_pokemon"
+        android:textSize="@dimen/_12ssp"
+        android:textStyle="bold" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvPokemon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:padding="@dimen/_3sdp"
+        android:paddingTop="@dimen/_10sdp"
+        tools:itemCount="20"
+        tools:listitem="@layout/item_pokemon" />
+
+</LinearLayout>
