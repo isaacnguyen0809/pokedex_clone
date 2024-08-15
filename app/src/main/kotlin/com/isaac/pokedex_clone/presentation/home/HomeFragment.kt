@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.isaac.pokedex_clone.R
 import com.isaac.pokedex_clone.databinding.FragmentHomeBinding
 import com.isaac.pokedex_clone.presentation.base.BaseFragment
+import com.isaac.pokedex_clone.presentation.home.viewmodel.DislikedPokemonEvent
 import com.isaac.pokedex_clone.presentation.home.viewmodel.HomeUiState
 import com.isaac.pokedex_clone.presentation.home.viewmodel.HomeViewModel
 import com.isaac.pokedex_clone.presentation.home.viewmodel.LikedPokemonEvent
@@ -17,6 +18,7 @@ import com.isaac.pokedex_clone.utils.OneTimeEvent
 import com.isaac.pokedex_clone.utils.collectEvent
 import com.isaac.pokedex_clone.utils.collectIn
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
@@ -70,10 +72,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         binding.rvPokemon.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (
-                    dy > 0 &&
-                    gridLayoutManager.findLastVisibleItemPosition() + VISIBLE_THRESHOLD >= gridLayoutManager.itemCount
-                ) {
+                if (dy > 0 && gridLayoutManager.findLastVisibleItemPosition() + VISIBLE_THRESHOLD >= gridLayoutManager.itemCount) {
                     viewModel.loadNextPage {
                         pokemonAdapter.addShowLoadingView()
                     }
@@ -85,6 +84,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private fun observeData() {
         viewModel.uiStateFlow.collectIn(this) { state ->
             if (state is HomeUiState.Success) {
+                delay(1000)
                 pokemonAdapter.submitList(state.data)
             } else {
                 pokemonAdapter.submitList(emptyList())
@@ -103,12 +103,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.getListPokemon()
-        viewModel.getListFavorite()
+        viewModel.disLikeStateFlow.collectEvent(this) {
+            if (it is DislikedPokemonEvent) {
+                val message = if (it.isDislikedSuccessful) "Delete favorite successful" else "Delete favorite failed"
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onDestroyView() {

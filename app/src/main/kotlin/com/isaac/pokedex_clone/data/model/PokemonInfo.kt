@@ -1,6 +1,7 @@
 package com.isaac.pokedex_clone.data.model
 
 import com.squareup.moshi.Json
+import java.util.Locale
 import kotlin.random.Random
 
 data class PokemonInfo(
@@ -15,12 +16,12 @@ data class PokemonInfo(
     val defense: Int = Random.nextInt(MAX_DEFENSE),
     val speed: Int = Random.nextInt(MAX_SPEED),
     val exp: Int = Random.nextInt(MAX_EXP),
-    val isFavorited: Boolean = false,
+    val isFavored: Boolean = false,
 ) {
 
-    fun getIdString(): String = String.format("#%03d", id)
-    fun getWeightString(): String = String.format("%.1f KG", weight.toFloat() / 10)
-    fun getHeightString(): String = String.format("%.1f M", height.toFloat() / 10)
+    fun getIdString(): String = String.format(Locale.US, "#%03d", id)
+    fun getWeightString(): String = String.format(Locale.US, "%.1f KG", weight.toFloat() / 10)
+    fun getHeightString(): String = String.format(Locale.US, "%.1f M", height.toFloat() / 10)
     fun getHpString(): String = " $hp/$MAX_HP"
     fun getAttackString(): String = " $attack/$MAX_ATTACK"
     fun getDefenseString(): String = " $defense/$MAX_DEFENSE"

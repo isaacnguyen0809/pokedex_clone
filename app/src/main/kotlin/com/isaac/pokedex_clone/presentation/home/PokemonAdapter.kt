@@ -68,13 +68,13 @@ class PokemonAdapter(val fragment: Fragment, val onLikedPokemon: (Pokemon) -> Un
             val extras = FragmentNavigatorExtras(binding.ivPokemon to item.imgUrl)
             binding.ivPokemon.transitionName = item.imgUrl
             binding.ivFavorite.setOnClickListener {
-                if (item.isFavorite) {
+                if (item.isFavored) {
                     onDislikePokemon.invoke(item)
                 } else {
                     onLikedPokemon.invoke(item)
                 }
             }
-            val colorIvFavorite = if (item.isFavorite) R.color.fire else R.color.white
+            val colorIvFavorite = if (item.isFavored) R.color.fire else R.color.white
             binding.ivFavorite.setColorFilter(context.getColor(colorIvFavorite))
             binding.root.setOnClickListener {
                 val directions = HomeFragmentDirections.actionHomeFragmentToDetailFragment(item, position.toString())

@@ -1,5 +1,6 @@
 package com.isaac.pokedex_clone.presentation.detail
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.isaac.pokedex_clone.data.mapper.Pokemon
@@ -52,7 +53,16 @@ class DetailViewModel @Inject constructor(
         _uiState.update { DetailUiState.Loading }
         viewModelScope.launch {
             getPokemonInfoUseCase.invoke(name).onSuccess { data ->
-                _uiState.update { DetailUiState.Success(pokemonInfo = data) }
+                favoritePokemonUseCase.getAllListFavoritePokemon().onSuccess { listFavorite ->
+                    var updatedPokemonInfo = data
+                    for (item in listFavorite) {
+                        if (updatedPokemonInfo.name.lowercase() == item.name.lowercase()) {
+                            updatedPokemonInfo = updatedPokemonInfo.copy(isFavored = true)
+                            break
+                        }
+                    }
+                    _uiState.update { DetailUiState.Success(pokemonInfo = updatedPokemonInfo) }
+                }
             }.onError { _, message, _ ->
                 _eventChannel.send(OneTimeEvent.Toast(message = message))
                 _uiState.update { DetailUiState.Error(error = message) }
@@ -63,17 +73,23 @@ class DetailViewModel @Inject constructor(
         }
     }
 
-    fun likePokemon(pokemon: Pokemon) {
+    fun likePokemon(pokemon: Pokemon, onExecute: () -> Unit) {
         viewModelScope.launch {
             _likedPokemonStateFlow.update {
                 val isSuccess = favoritePokemonUseCase.likePokemon(pokemon).isSuccess
                 if (isSuccess) {
-                    if (_uiState.value is DetailUiState.Success) {
-                        val updatedPokemonInfo = (_uiState.value as DetailUiState.Success).pokemonInfo.copy(isFavorited = true)
-                        _uiState.update {
-                            DetailUiState.Success(updatedPokemonInfo)
+                    favoritePokemonUseCase.getAllListFavoritePokemon().onSuccess { listFavorite ->
+                        val currentState = _uiState.value as DetailUiState.Success
+                        var updatedPokemonInfo = currentState.pokemonInfo
+                        for (item in listFavorite) {
+                            if (updatedPokemonInfo.name.lowercase() == item.name.lowercase()) {
+                                updatedPokemonInfo = updatedPokemonInfo.copy(isFavored = true)
+                                break
+                            }
                         }
+                        _uiState.value = currentState.copy(pokemonInfo = updatedPokemonInfo)
                     }
+                    onExecute.invoke()
                 }
                 object : UiEvent<LikedPokemonEvent> {
                     override val data: LikedPokemonEvent = LikedPokemonEvent(isSuccess)
@@ -83,17 +99,25 @@ class DetailViewModel @Inject constructor(
         }
     }
 
-    fun dislikePokemon(pokemon: Pokemon) {
+    fun dislikePokemon(pokemon: Pokemon, onExecute: () -> Unit) {
         viewModelScope.launch {
             _dislikeStateFlow.update {
                 val isSuccess = favoritePokemonUseCase.unlikePokemon(pokemon).isSuccess
                 if (isSuccess) {
-                    if (_uiState.value is DetailUiState.Success) {
-                        val updatedPokemonInfo = (_uiState.value as DetailUiState.Success).pokemonInfo.copy(isFavorited = false)
+                    favoritePokemonUseCase.getAllListFavoritePokemon().onSuccess { listFavorite ->
+                        val currentState = _uiState.value as DetailUiState.Success
+                        var updatedPokemonInfo = currentState.pokemonInfo
+                        updatedPokemonInfo = updatedPokemonInfo.copy(
+                            isFavored = checkSeeIfPokemonWasFavored(
+                                listFavorite,
+                                updatedPokemonInfo
+                            )
+                        )
                         _uiState.update {
-                            DetailUiState.Success(updatedPokemonInfo)
+                            currentState.copy(pokemonInfo = updatedPokemonInfo)
                         }
                     }
+                    onExecute.invoke()
                 }
                 object : UiEvent<DislikedPokemonEvent> {
                     override val data: DislikedPokemonEvent = DislikedPokemonEvent(isSuccess)
@@ -102,5 +126,11 @@ class DetailViewModel @Inject constructor(
 
             }
         }
+    }
+
+    private fun checkSeeIfPokemonWasFavored(listPokemon: List<Pokemon>, pokemonInfo: PokemonInfo): Boolean {
+        val listFavored = listPokemon.filter { it.name.lowercase() == pokemonInfo.name.lowercase() }
+        Log.d("DUCKHANH", "checkSeeIfPokemonWasFavored: $listFavored")
+        return !listFavored.isEmpty()
     }
 }

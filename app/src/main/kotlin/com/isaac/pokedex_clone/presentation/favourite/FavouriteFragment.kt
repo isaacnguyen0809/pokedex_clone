@@ -24,6 +24,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
     }
 
     override fun setupView() {
+        viewModel.getListFavorite()
         setupRecyclerView()
         observerData()
     }
@@ -76,11 +77,6 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
             }
         val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
         itemTouchHelper.attachToRecyclerView(binding.rvPokemon)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.getListFavorite()
     }
 
     override fun onDestroyView() {

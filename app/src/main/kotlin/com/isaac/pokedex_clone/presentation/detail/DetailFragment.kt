@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -24,6 +25,7 @@ import com.isaac.pokedex_clone.R
 import com.isaac.pokedex_clone.data.model.PokemonInfo
 import com.isaac.pokedex_clone.databinding.FragmentDetailBinding
 import com.isaac.pokedex_clone.presentation.base.BaseFragment
+import com.isaac.pokedex_clone.presentation.home.viewmodel.HomeViewModel
 import com.isaac.pokedex_clone.utils.OneTimeEvent
 import com.isaac.pokedex_clone.utils.PokemonTypeUtils
 import com.isaac.pokedex_clone.utils.collectEventChannel
@@ -36,6 +38,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class DetailFragment : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding::inflate) {
 
     private val viewModel by viewModels<DetailViewModel>()
+    private val homeViewModel by activityViewModels<HomeViewModel>()
 
     private val args by navArgs<DetailFragmentArgs>()
 
@@ -112,10 +115,14 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding
             if (viewModel.uiState.value is DetailUiState.Success) {
                 val pokemonInfo = (viewModel.uiState.value as DetailUiState.Success).pokemonInfo
                 val pokemon = args.itemPokemon
-                if (pokemonInfo.isFavorited) {
-                    viewModel.dislikePokemon(pokemon)
+                if (pokemonInfo.isFavored) {
+                    viewModel.dislikePokemon(pokemon) {
+                        homeViewModel.getListFavorite()
+                    }
                 } else {
-                    viewModel.likePokemon(pokemon)
+                    viewModel.likePokemon(pokemon) {
+                        homeViewModel.getListFavorite()
+                    }
                 }
             }
         }
@@ -130,7 +137,6 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding
             binding.clContent.isVisible = state is DetailUiState.Success
             when (state) {
                 is DetailUiState.Success -> {
-
                     binding.clContent.startAnimation(animCustom)
                     state.pokemonInfo.types.forEach {
                         addChipItem(
@@ -161,7 +167,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding
                     binding.lpbExp.max = PokemonInfo.MAX_EXP
                     binding.lpbExp.progress = state.pokemonInfo.exp
                     val colorIvFavorite =
-                        if (state.pokemonInfo.isFavorited) R.color.fire else R.color.white
+                        if (state.pokemonInfo.isFavored) R.color.fire else R.color.white
                     binding.ivFavorite.setColorFilter(
                         ContextCompat.getColor(
                             requireContext(),
@@ -192,7 +198,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding
     private fun setUpShareElementTransition() {
         val animation = TransitionInflater.from(requireContext())
             .inflateTransition(android.R.transition.move).apply {
-                duration = 500
+                duration = 700
             }
         sharedElementEnterTransition = animation
     }

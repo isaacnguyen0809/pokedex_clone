@@ -50,14 +50,25 @@ class HomeViewModel @Inject constructor(
     internal val favorStateFlow = _favorStateFlow.asStateFlow()
 
     init {
+        getListPokemon()
     }
 
     fun getListFavorite() {
         viewModelScope.launch {
-            _favorStateFlow.update{
+            _favorStateFlow.update {
                 FavoriteUiState.Loading
             }
             favoritePokemonUseCase.getAllListFavoritePokemon().onSuccess { result ->
+                val currentState = _uiMutableStateFlow.value as HomeUiState.Success
+                val fullList = currentState.data.map { it?.copy(isFavored = false) }.toMutableList()
+                fullList.forEachIndexed { index, pokemon ->
+                    result.forEach { inner ->
+                        if (pokemon?.name?.lowercase() == inner.name.lowercase()) {
+                            fullList[index] = fullList[index]?.copy(isFavored = true)
+                        }
+                    }
+                }
+                _uiMutableStateFlow.value = currentState.copy(data = fullList)
                 _favorStateFlow.update {
                     FavoriteUiState.Success(result)
                 }
@@ -75,18 +86,7 @@ class HomeViewModel @Inject constructor(
             _likedPokemonStateFlow.update {
                 val isSuccess = favoritePokemonUseCase.likePokemon(pokemon).isSuccess
                 if (isSuccess) {
-                    favoritePokemonUseCase.getAllListFavoritePokemon().onSuccess { listFavorite ->
-                        val currentState = _uiMutableStateFlow.value as HomeUiState.Success
-                        val fullList = currentState.data.toMutableList()
-                        fullList.forEachIndexed { index, pokemon ->
-                            listFavorite.forEach { inner ->
-                                if (pokemon?.name?.lowercase() == inner.name.lowercase()) {
-                                    fullList[index] = fullList[index]?.copy(isFavorite = true)
-                                }
-                            }
-                        }
-                        _uiMutableStateFlow.value = currentState.copy(data = fullList)
-                    }
+                    getListFavorite()
                 }
                 object : UiEvent<LikedPokemonEvent> {
                     override val data: LikedPokemonEvent = LikedPokemonEvent(isSuccess)
@@ -101,19 +101,7 @@ class HomeViewModel @Inject constructor(
             _dislikeStateFlow.update {
                 val isSuccess = favoritePokemonUseCase.unlikePokemon(pokemon).isSuccess
                 if (isSuccess) {
-                    favoritePokemonUseCase.getAllListFavoritePokemon().onSuccess { listFavorite ->
-                        val currentState = _uiMutableStateFlow.value as HomeUiState.Success
-                        val fullList =
-                            currentState.data.map { it?.copy(isFavorite = false) }.toMutableList()
-                        fullList.forEachIndexed { index, pokemon ->
-                            listFavorite.forEach { inner ->
-                                if (pokemon?.name?.lowercase() == inner.name.lowercase()) {
-                                    fullList[index] = fullList[index]?.copy(isFavorite = true)
-                                }
-                            }
-                        }
-                        _uiMutableStateFlow.value = currentState.copy(data = fullList)
-                    }
+                    getListFavorite()
                 }
                 object : UiEvent<DislikedPokemonEvent> {
                     override val data: DislikedPokemonEvent = DislikedPokemonEvent(isSuccess)
@@ -128,12 +116,12 @@ class HomeViewModel @Inject constructor(
         _uiMutableStateFlow.value = if (isRefresh) HomeUiState.RefreshList else HomeUiState.Loading
         viewModelScope.launch {
             getListPokemonUseCase.invoke(page = 0).onSuccess { data ->
-                favoritePokemonUseCase.getAllListFavoritePokemon().onSuccess({ listFavorite ->
+                favoritePokemonUseCase.getAllListFavoritePokemon().onSuccess { listFavorite ->
                     val fullList = data.result.map { it.toDomain() }.toMutableList()
                     fullList.forEachIndexed { index, pokemon ->
                         listFavorite.forEach { inner ->
                             if (pokemon.name.lowercase() == inner.name.lowercase()) {
-                                fullList[index] = fullList[index].copy(isFavorite = true)
+                                fullList[index] = fullList[index].copy(isFavored = true)
                             }
                         }
                     }
@@ -142,8 +130,7 @@ class HomeViewModel @Inject constructor(
                         currentPage = 1,
                         isLoadingNextPage = false,
                     )
-                }
-                ).onFailure {
+                }.onFailure {
                     Log.d("ISSAC", "getListPokemon getAllListFavoritePokemon failed ${it.message}")
                 }
 
@@ -187,7 +174,7 @@ class HomeViewModel @Inject constructor(
                         fullList.forEachIndexed { index, pokemon ->
                             listFavorite.forEach { inner ->
                                 if (pokemon?.name?.lowercase() == inner.name.lowercase()) {
-                                    fullList[index] = fullList[index]?.copy(isFavorite = true)
+                                    fullList[index] = fullList[index]?.copy(isFavored = true)
                                 }
                             }
                         }

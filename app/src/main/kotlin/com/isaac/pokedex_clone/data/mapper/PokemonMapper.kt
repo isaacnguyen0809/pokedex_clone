@@ -11,7 +11,7 @@ data class Pokemon(
     val id: UUID,
     val name: String,
     val imgUrl: String,
-    val isFavorite: Boolean = false,
+    val isFavored: Boolean = false,
 ) : Parcelable
 
 fun FavoritePokemonEntity.toDomain(): Pokemon = Pokemon(
