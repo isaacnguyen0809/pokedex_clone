@@ -4,7 +4,6 @@ import com.isaac.pokedex_clone.data.mapper.Pokemon
 import com.isaac.pokedex_clone.data.model.ListPokemonResponse
 import com.isaac.pokedex_clone.data.model.PokemonInfo
 import com.isaac.pokedex_clone.data.remote.retrofit.ApiResponse
-import kotlinx.coroutines.flow.Flow
 
 interface PokemonRepository {
     suspend fun fetchPokemonList(page: Int): ApiResponse<ListPokemonResponse>
@@ -15,5 +14,5 @@ interface PokemonRepository {
 
     suspend fun unlikePokemon(pokemon: Pokemon): Result<Unit>
 
-    suspend fun getAllFavouritePokemon(): Result<List<Pokemon>>
+    suspend fun getAllFavoritePokemon(): Result<List<Pokemon>>
 }

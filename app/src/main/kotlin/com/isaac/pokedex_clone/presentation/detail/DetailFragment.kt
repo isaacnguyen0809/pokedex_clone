@@ -1,4 +1,4 @@
-package com.isaac.pokedex_clone.presentation.detail_screen
+package com.isaac.pokedex_clone.presentation.detail
 
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -24,6 +25,7 @@ import com.isaac.pokedex_clone.R
 import com.isaac.pokedex_clone.data.model.PokemonInfo
 import com.isaac.pokedex_clone.databinding.FragmentDetailBinding
 import com.isaac.pokedex_clone.presentation.base.BaseFragment
+import com.isaac.pokedex_clone.presentation.home.viewmodel.HomeViewModel
 import com.isaac.pokedex_clone.utils.OneTimeEvent
 import com.isaac.pokedex_clone.utils.PokemonTypeUtils
 import com.isaac.pokedex_clone.utils.collectEventChannel
@@ -36,6 +38,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class DetailFragment : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding::inflate) {
 
     private val viewModel by viewModels<DetailViewModel>()
+    private val homeViewModel by activityViewModels<HomeViewModel>()
 
     private val args by navArgs<DetailFragmentArgs>()
 
@@ -57,7 +60,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding
     override fun setupView() {
         setUpShareElementTransition()
         viewModel.getPokemonInfo(args.itemPokemon.name)
-        binding.index.text = getString(R.string.pokemon_number, args.position)
+        binding.tvIndex.text = getString(R.string.pokemon_number, args.position)
         binding.tvName.text = args.itemPokemon.name.replaceFirstChar { it.uppercase() }
 
         binding.ivPokemon.transitionName = args.itemPokemon.imgUrl
@@ -82,12 +85,12 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding
 
                     if (startColor != null && endColor != null) {
                         window.statusBarColor = startColor
-                        binding.progressHp.setIndicatorColor(endColor)
-                        binding.progressATK.setIndicatorColor(endColor)
-                        binding.progressDEF.setIndicatorColor(endColor)
-                        binding.progressSPD.setIndicatorColor(endColor)
-                        binding.progressEXP.setIndicatorColor(endColor)
-                        binding.header.setBackgroundDrawable(GradientDrawable().apply {
+                        binding.lpbHp.setIndicatorColor(endColor)
+                        binding.lpbAtk.setIndicatorColor(endColor)
+                        binding.lpbDef.setIndicatorColor(endColor)
+                        binding.lpbSpd.setIndicatorColor(endColor)
+                        binding.lpbExp.setIndicatorColor(endColor)
+                        binding.sivHeader.setBackgroundDrawable(GradientDrawable().apply {
                             colors = intArrayOf(
                                 startColor,
                                 endColor
@@ -108,41 +111,79 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding
         }
 
 
+        binding.ivFavorite.setOnClickListener {
+            if (viewModel.uiState.value is DetailUiState.Success) {
+                val pokemonInfo = (viewModel.uiState.value as DetailUiState.Success).pokemonInfo
+                val pokemon = args.itemPokemon
+                if (pokemonInfo.isFavored) {
+                    viewModel.dislikePokemon(pokemon) {
+                        homeViewModel.getListFavorite()
+                    }
+                } else {
+                    viewModel.likePokemon(pokemon) {
+                        homeViewModel.getListFavorite()
+                    }
+                }
+            }
+        }
+
+
         viewModel.uiState.collectIn(this) { state ->
-            binding.progressBar.isVisible = state is DetailUiState.Loading
+            binding.pbLoading.isVisible = state is DetailUiState.Loading
             binding.btRetry.isVisible = state is DetailUiState.Error
             binding.btRetry.setOnClickListener {
                 viewModel.getPokemonInfo(args.itemPokemon.name)
             }
-            binding.layoutContent.isVisible = state is DetailUiState.Success
+            binding.clContent.isVisible = state is DetailUiState.Success
             when (state) {
                 is DetailUiState.Success -> {
-
-                    binding.layoutContent.startAnimation(animCustom)
+                    binding.clContent.startAnimation(animCustom)
                     state.pokemonInfo.types.forEach {
-                        addChipItem(text = it.type.name, PokemonTypeUtils.getTypeColor(it.type.name))
+                        addChipItem(
+                            text = it.type.name,
+                            PokemonTypeUtils.getTypeColor(it.type.name)
+                        )
                     }
                     binding.tvHeightValue.text = state.pokemonInfo.getHeightString()
                     binding.tvWeightValue.text = state.pokemonInfo.getWeightString()
 
                     binding.tvValueHp.text = state.pokemonInfo.getHpString()
-                    binding.progressHp.max = PokemonInfo.MAX_HP
-                    binding.progressHp.progress = state.pokemonInfo.hp
-                    binding.tvValueATK.text = state.pokemonInfo.getAttackString()
-                    binding.progressATK.max = PokemonInfo.MAX_ATTACK
-                    binding.progressATK.progress = state.pokemonInfo.attack
-                    binding.tvValueDEF.text = state.pokemonInfo.getDefenseString()
-                    binding.progressDEF.max = PokemonInfo.MAX_DEFENSE
-                    binding.progressDEF.progress = state.pokemonInfo.defense
-                    binding.tvValueSPD.text = state.pokemonInfo.getSpeedString()
-                    binding.progressSPD.max = PokemonInfo.MAX_SPEED
-                    binding.progressSPD.progress = state.pokemonInfo.speed
-                    binding.tvValueEXP.text = state.pokemonInfo.getExpString()
-                    binding.progressEXP.max = PokemonInfo.MAX_EXP
-                    binding.progressEXP.progress = state.pokemonInfo.exp
+                    binding.lpbHp.max = PokemonInfo.MAX_HP
+                    binding.lpbHp.progress = state.pokemonInfo.hp
+
+                    binding.tvAtkValue.text = state.pokemonInfo.getAttackString()
+                    binding.lpbAtk.max = PokemonInfo.MAX_ATTACK
+                    binding.lpbAtk.progress = state.pokemonInfo.attack
+
+                    binding.tvDefValue.text = state.pokemonInfo.getDefenseString()
+                    binding.lpbDef.max = PokemonInfo.MAX_DEFENSE
+                    binding.lpbDef.progress = state.pokemonInfo.defense
+
+                    binding.tvSpdValue.text = state.pokemonInfo.getSpeedString()
+                    binding.lpbSpd.max = PokemonInfo.MAX_SPEED
+                    binding.lpbSpd.progress = state.pokemonInfo.speed
+
+                    binding.tvExpValue.text = state.pokemonInfo.getExpString()
+                    binding.lpbExp.max = PokemonInfo.MAX_EXP
+                    binding.lpbExp.progress = state.pokemonInfo.exp
+                    val colorIvFavorite =
+                        if (state.pokemonInfo.isFavored) R.color.fire else R.color.white
+                    binding.ivFavorite.setColorFilter(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            colorIvFavorite
+                        )
+                    )
                 }
 
                 else -> {
+                    binding.ivFavorite.setColorFilter(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.white
+                        )
+                    )
+
                 }
             }
         }
@@ -157,12 +198,13 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding
     private fun setUpShareElementTransition() {
         val animation = TransitionInflater.from(requireContext())
             .inflateTransition(android.R.transition.move).apply {
-                duration = 500
+                duration = 700
             }
         sharedElementEnterTransition = animation
     }
 
     private fun addChipItem(text: String = "", backgroundColor: Int = R.color.mauvelous) {
+        binding.cgElement.removeAllViews()
         val chip = Chip(this.requireContext())
         chip.text = text.replaceFirstChar { it.uppercase() }
         chip.isEnabled = false
@@ -172,7 +214,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding
             ColorStateList.valueOf(ContextCompat.getColor(requireContext(), backgroundColor))
         chip.shapeAppearanceModel = ShapeAppearanceModel().withCornerSize(30f)
         chip.setEnsureMinTouchTargetSize(false)
-        binding.chipGroup.addView(chip)
+        binding.cgElement.addView(chip)
     }
 
 }

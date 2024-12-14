@@ -1,7 +1,6 @@
-package com.isaac.pokedex_clone.presentation.home_screen.viewmodel
+package com.isaac.pokedex_clone.presentation.home.viewmodel
 
 import com.isaac.pokedex_clone.data.mapper.Pokemon
-import com.isaac.pokedex_clone.data.model.PokemonResponse
 
 sealed interface HomeUiState {
     data object Loading : HomeUiState

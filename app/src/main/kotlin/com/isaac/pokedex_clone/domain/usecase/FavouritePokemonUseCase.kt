@@ -4,10 +4,10 @@ import com.isaac.pokedex_clone.data.mapper.Pokemon
 import com.isaac.pokedex_clone.domain.repository.PokemonRepository
 import javax.inject.Inject
 
-class FavouritePokemonUseCase @Inject constructor(
+class FavoritePokemonUseCase @Inject constructor(
     private val pokemonRepository: PokemonRepository,
 ) {
-    suspend fun getAllListFavouritePokemon(): Result<List<Pokemon>> = pokemonRepository.getAllFavouritePokemon()
+    suspend fun getAllListFavoritePokemon(): Result<List<Pokemon>> = pokemonRepository.getAllFavoritePokemon()
 
     suspend fun likePokemon(pokemon: Pokemon) = pokemonRepository.likePokemon(pokemon)
 

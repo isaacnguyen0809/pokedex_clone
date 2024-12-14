@@ -5,17 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".presentation.detail_screen.DetailFragment">
+    tools:context=".presentation.detail.DetailFragment">
 
     <FrameLayout
-        android:id="@+id/headerLayout"
+        android:id="@+id/fl_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/header"
+            android:id="@+id/siv_header"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_220sdp"
             android:layout_marginBottom="@dimen/_10sdp"
@@ -24,7 +24,7 @@
     </FrameLayout>
 
     <ImageView
-        android:id="@+id/ivBack"
+        android:id="@+id/iv_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_12sdp"
@@ -34,31 +34,45 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/index"
+        android:id="@+id/tv_index"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_12sdp"
         android:fontFamily="@font/grostesk"
         android:padding="@dimen/_12sdp"
         android:textColor="@color/white"
         android:textSize="@dimen/_12sdp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/iv_back"
+        app:layout_constraintEnd_toStartOf="@id/iv_favorite"
+        app:layout_constraintTop_toTopOf="@id/iv_back"
+        app:layout_constraintBottom_toBottomOf="@id/iv_back"
         tools:text="#001" />
 
     <ImageView
-        android:id="@+id/ivPokemon"
+        android:id="@+id/iv_favorite"
+        android:layout_width="@dimen/_26sdp"
+        android:layout_height="@dimen/_26sdp"
+        android:padding="@dimen/_6sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:src="@drawable/ic_favorite"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_back"
+        app:layout_constraintBottom_toBottomOf="@id/iv_back"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/iv_pokemon"
         android:layout_width="@dimen/_120sdp"
         android:layout_height="@dimen/_120sdp"
         android:layout_marginTop="@dimen/_12sdp"
         android:src="@drawable/pokeball"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivBack" />
+        app:layout_constraintTop_toBottomOf="@id/iv_back" />
 
     <TextView
-        android:id="@+id/tvName"
+        android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/grostesk"
@@ -66,20 +80,20 @@
         android:textSize="@dimen/_20ssp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/headerLayout"
+        app:layout_constraintTop_toBottomOf="@id/fl_header"
         tools:text="@string/app_name" />
 
     <com.google.android.material.chip.ChipGroup
-        android:id="@+id/chipGroup"
+        android:id="@+id/cg_element"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_6sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvName" />
+        app:layout_constraintTop_toBottomOf="@id/tv_name" />
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/pb_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:indeterminate="true"
@@ -91,7 +105,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btRetry"
+        android:id="@+id/bt_retry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_20sdp"
@@ -99,29 +113,29 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvName" />
+        app:layout_constraintTop_toBottomOf="@id/tv_name" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layoutContent"
+        android:id="@+id/cl_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chipGroup">
+        app:layout_constraintTop_toBottomOf="@id/cg_element">
 
         <LinearLayout
-            android:id="@+id/lnWeight"
+            android:id="@+id/ll_weight"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_12sdp"
             android:layout_marginTop="@dimen/_12sdp"
             android:gravity="center"
             android:orientation="vertical"
-            app:layout_constraintEnd_toStartOf="@id/lnHeight"
+            app:layout_constraintEnd_toStartOf="@id/ll_height"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/tvWeightValue"
+                android:id="@+id/tv_weight_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/tommy_light"
@@ -142,7 +156,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/lnHeight"
+            android:id="@+id/ll_height"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_12sdp"
@@ -150,11 +164,11 @@
             android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/lnWeight"
+            app:layout_constraintStart_toEndOf="@id/ll_weight"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/tvHeightValue"
+                android:id="@+id/tv_height_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/tommy_light"
@@ -175,7 +189,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tvBaseStats"
+            android:id="@+id/tv_base_stats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_12sdp"
@@ -185,10 +199,10 @@
             android:textSize="@dimen/_20ssp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lnWeight" />
+            app:layout_constraintTop_toBottomOf="@id/ll_weight" />
 
         <TextView
-            android:id="@+id/tvHp"
+            android:id="@+id/tv_hp"
             android:layout_width="@dimen/_35sdp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_20sdp"
@@ -198,39 +212,39 @@
             android:textColor="@color/black"
             android:textSize="@dimen/_15ssp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvBaseStats" />
+            app:layout_constraintTop_toBottomOf="@id/tv_base_stats" />
 
         <TextView
-            android:id="@+id/tvValueHp"
+            android:id="@+id/tv_value_hp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_12sdp"
             android:fontFamily="@font/grotesk_thin"
             android:textColor="@color/black"
             android:textSize="@dimen/_13ssp"
-            app:layout_constraintBottom_toBottomOf="@+id/tvHp"
-            app:layout_constraintEnd_toStartOf="@id/progressHp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_hp"
+            app:layout_constraintEnd_toStartOf="@id/lpb_hp"
             app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@id/tvHp"
-            app:layout_constraintTop_toTopOf="@id/tvHp"
+            app:layout_constraintStart_toEndOf="@id/tv_hp"
+            app:layout_constraintTop_toTopOf="@id/tv_hp"
             tools:text="30" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:id="@+id/progressHp"
+            android:id="@+id/lpb_hp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_12sdp"
             android:layout_marginEnd="@dimen/_20sdp"
-            app:layout_constraintBottom_toBottomOf="@+id/tvValueHp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_value_hp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="2"
-            app:layout_constraintStart_toEndOf="@id/tvValueHp"
-            app:layout_constraintTop_toTopOf="@id/tvValueHp"
+            app:layout_constraintStart_toEndOf="@id/tv_value_hp"
+            app:layout_constraintTop_toTopOf="@id/tv_value_hp"
             app:trackCornerRadius="@dimen/_12sdp"
             app:trackThickness="@dimen/_10sdp" />
 
         <TextView
-            android:id="@+id/tvATK"
+            android:id="@+id/tv_atk"
             android:layout_width="@dimen/_35sdp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_20sdp"
@@ -240,39 +254,39 @@
             android:textColor="@color/black"
             android:textSize="@dimen/_15ssp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvHp" />
+            app:layout_constraintTop_toBottomOf="@id/tv_hp" />
 
         <TextView
-            android:id="@+id/tvValueATK"
+            android:id="@+id/tv_atk_value"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_12sdp"
             android:fontFamily="@font/grotesk_thin"
             android:textColor="@color/black"
             android:textSize="@dimen/_13ssp"
-            app:layout_constraintBottom_toBottomOf="@+id/tvATK"
-            app:layout_constraintEnd_toStartOf="@id/progressATK"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_atk"
+            app:layout_constraintEnd_toStartOf="@id/lpb_atk"
             app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@id/tvATK"
-            app:layout_constraintTop_toTopOf="@id/tvATK"
+            app:layout_constraintStart_toEndOf="@id/tv_atk"
+            app:layout_constraintTop_toTopOf="@id/tv_atk"
             tools:text="1000/1000" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:id="@+id/progressATK"
+            android:id="@+id/lpb_atk"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_12sdp"
             android:layout_marginEnd="@dimen/_20sdp"
-            app:layout_constraintBottom_toBottomOf="@+id/tvValueATK"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_atk_value"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="2"
-            app:layout_constraintStart_toEndOf="@id/tvValueATK"
-            app:layout_constraintTop_toTopOf="@id/tvValueATK"
+            app:layout_constraintStart_toEndOf="@id/tv_atk_value"
+            app:layout_constraintTop_toTopOf="@id/tv_atk_value"
             app:trackCornerRadius="@dimen/_12sdp"
             app:trackThickness="@dimen/_10sdp" />
 
         <TextView
-            android:id="@+id/tvDEF"
+            android:id="@+id/tv_def"
             android:layout_width="@dimen/_35sdp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_20sdp"
@@ -282,39 +296,39 @@
             android:textColor="@color/black"
             android:textSize="@dimen/_15ssp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvATK" />
+            app:layout_constraintTop_toBottomOf="@id/tv_atk" />
 
         <TextView
-            android:id="@+id/tvValueDEF"
+            android:id="@+id/tv_def_value"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_12sdp"
             android:fontFamily="@font/grotesk_thin"
             android:textColor="@color/black"
             android:textSize="@dimen/_13ssp"
-            app:layout_constraintBottom_toBottomOf="@+id/tvDEF"
-            app:layout_constraintEnd_toStartOf="@id/progressDEF"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_def"
+            app:layout_constraintEnd_toStartOf="@id/lpb_def"
             app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@id/tvDEF"
-            app:layout_constraintTop_toTopOf="@id/tvDEF"
+            app:layout_constraintStart_toEndOf="@id/tv_def"
+            app:layout_constraintTop_toTopOf="@id/tv_def"
             tools:text="30" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:id="@+id/progressDEF"
+            android:id="@+id/lpb_def"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_12sdp"
             android:layout_marginEnd="@dimen/_20sdp"
-            app:layout_constraintBottom_toBottomOf="@+id/tvValueDEF"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_def_value"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="2"
-            app:layout_constraintStart_toEndOf="@id/tvValueDEF"
-            app:layout_constraintTop_toTopOf="@id/tvValueDEF"
+            app:layout_constraintStart_toEndOf="@id/tv_def_value"
+            app:layout_constraintTop_toTopOf="@id/tv_def_value"
             app:trackCornerRadius="@dimen/_12sdp"
             app:trackThickness="@dimen/_10sdp" />
 
         <TextView
-            android:id="@+id/tvSPD"
+            android:id="@+id/tv_spd"
             android:layout_width="@dimen/_35sdp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_20sdp"
@@ -324,39 +338,39 @@
             android:textColor="@color/black"
             android:textSize="@dimen/_15ssp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvDEF" />
+            app:layout_constraintTop_toBottomOf="@id/tv_def" />
 
         <TextView
-            android:id="@+id/tvValueSPD"
+            android:id="@+id/tv_spd_value"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_12sdp"
             android:fontFamily="@font/grotesk_thin"
             android:textColor="@color/black"
             android:textSize="@dimen/_13ssp"
-            app:layout_constraintBottom_toBottomOf="@+id/tvSPD"
-            app:layout_constraintEnd_toStartOf="@id/progressSPD"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_spd"
+            app:layout_constraintEnd_toStartOf="@id/lpb_spd"
             app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@id/tvSPD"
-            app:layout_constraintTop_toTopOf="@id/tvSPD"
+            app:layout_constraintStart_toEndOf="@id/tv_spd"
+            app:layout_constraintTop_toTopOf="@id/tv_spd"
             tools:text="30" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:id="@+id/progressSPD"
+            android:id="@+id/lpb_spd"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_12sdp"
             android:layout_marginEnd="@dimen/_20sdp"
-            app:layout_constraintBottom_toBottomOf="@+id/tvValueSPD"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_spd_value"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="2"
-            app:layout_constraintStart_toEndOf="@id/tvValueSPD"
-            app:layout_constraintTop_toTopOf="@id/tvValueSPD"
+            app:layout_constraintStart_toEndOf="@id/tv_spd_value"
+            app:layout_constraintTop_toTopOf="@id/tv_spd_value"
             app:trackCornerRadius="@dimen/_12sdp"
             app:trackThickness="@dimen/_10sdp" />
 
         <TextView
-            android:id="@+id/tvEXP"
+            android:id="@+id/tv_exp"
             android:layout_width="@dimen/_35sdp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_20sdp"
@@ -366,34 +380,34 @@
             android:textColor="@color/black"
             android:textSize="@dimen/_15ssp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvSPD" />
+            app:layout_constraintTop_toBottomOf="@id/tv_spd" />
 
         <TextView
-            android:id="@+id/tvValueEXP"
+            android:id="@+id/tv_exp_value"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_12sdp"
             android:fontFamily="@font/grotesk_thin"
             android:textColor="@color/black"
             android:textSize="@dimen/_13ssp"
-            app:layout_constraintBottom_toBottomOf="@+id/tvEXP"
-            app:layout_constraintEnd_toStartOf="@id/progressEXP"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_exp"
+            app:layout_constraintEnd_toStartOf="@id/lpb_exp"
             app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@id/tvEXP"
-            app:layout_constraintTop_toTopOf="@id/tvEXP"
+            app:layout_constraintStart_toEndOf="@id/tv_exp"
+            app:layout_constraintTop_toTopOf="@id/tv_exp"
             tools:text="30" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:id="@+id/progressEXP"
+            android:id="@+id/lpb_exp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_12sdp"
             android:layout_marginEnd="@dimen/_20sdp"
-            app:layout_constraintBottom_toBottomOf="@+id/tvValueEXP"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_exp_value"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="2"
-            app:layout_constraintStart_toEndOf="@id/tvValueEXP"
-            app:layout_constraintTop_toTopOf="@id/tvValueEXP"
+            app:layout_constraintStart_toEndOf="@id/tv_exp_value"
+            app:layout_constraintTop_toTopOf="@id/tv_exp_value"
             app:trackCornerRadius="@dimen/_12sdp"
             app:trackThickness="@dimen/_10sdp" />
     </androidx.constraintlayout.widget.ConstraintLayout>

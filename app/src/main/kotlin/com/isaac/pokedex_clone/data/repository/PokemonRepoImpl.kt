@@ -1,6 +1,6 @@
 package com.isaac.pokedex_clone.data.repository
 
-import com.isaac.pokedex_clone.data.local.dao.FavouritePokemonDao
+import com.isaac.pokedex_clone.data.local.dao.FavoritePokemonDao
 import com.isaac.pokedex_clone.data.mapper.Pokemon
 import com.isaac.pokedex_clone.data.mapper.toDomain
 import com.isaac.pokedex_clone.data.mapper.toEntity
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 class PokemonRepoImpl @Inject constructor(
     private val pokemonService: PokemonService,
-    private val favouritePokemonDao: FavouritePokemonDao,
+    private val favoritePokemonDao: FavoritePokemonDao,
     @AppDispatcher(DispatcherType.IO) private val ioDispatcher: CoroutineDispatcher,
 ) : PokemonRepository {
     override suspend fun fetchPokemonList(page: Int): ApiResponse<ListPokemonResponse> = withContext(ioDispatcher) {
@@ -34,20 +34,20 @@ class PokemonRepoImpl @Inject constructor(
 
     override suspend fun likePokemon(pokemon: Pokemon): Result<Unit> = runSuspendCatching {
         withContext(ioDispatcher) {
-            favouritePokemonDao.insertPokemon(pokemon.toEntity())
+            favoritePokemonDao.insertPokemon(pokemon.toEntity())
         }
     }
 
     override suspend fun unlikePokemon(pokemon: Pokemon): Result<Unit> = runSuspendCatching {
         withContext(ioDispatcher) {
-            favouritePokemonDao.delete(pokemon.toEntity())
+            favoritePokemonDao.delete(pokemon.toEntity())
         }
     }
 
 
-    override suspend fun getAllFavouritePokemon(): Result<List<Pokemon>> = runSuspendCatching {
+    override suspend fun getAllFavoritePokemon(): Result<List<Pokemon>> = runSuspendCatching {
         withContext(ioDispatcher) {
-            favouritePokemonDao.getAllFavouritePokemon().map { it.toDomain() }
+            favoritePokemonDao.getAllFavoritePokemon().map { it.toDomain() }
         }
     }
 
